@@ -43,7 +43,7 @@ export function selectFamilyStudents() {
 
 // Selector: get sessions (session templates) for the current user's location scope
 export function selectScopedSessionTemplates() {
-  const { currentUser, sessionTemplates, cohorts, cohortRules, programs, locations } =
+  const { currentUser, sessionTemplates, locations } =
     useDataStore.getState();
   if (!currentUser) return [];
   const scopedLocationIds =

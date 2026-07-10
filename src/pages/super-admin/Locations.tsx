@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useDataStore, LocationActions } from '../../store/dataStore';
 import { DataTable, type Column } from '../../components/ui/DataTable';

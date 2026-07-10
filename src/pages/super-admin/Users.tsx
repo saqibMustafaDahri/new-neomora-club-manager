@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useDataStore, UserActions } from '../../store/dataStore';
 import { DataTable, type Column } from '../../components/ui/DataTable';
@@ -60,7 +60,7 @@ export function Users() {
     const role = selectedRole;
     
     let locationScope: string[] = [];
-    let familyId: string | undefined = undefined;
+    let familyId: string | null = null;
 
     if (role === 'locationManager' || role === 'coach') {
       // In a real app we'd use a multi-select component. For this, we'll just read checked inputs.
@@ -68,7 +68,7 @@ export function Users() {
         .map(input => (input as HTMLInputElement).value);
       locationScope = checkedLocations;
     } else if (role === 'parent') {
-      familyId = (fd.get('familyId') as string) || undefined;
+      familyId = (fd.get('familyId') as string) || null;
     }
 
     const id = `user_${Date.now()}`;
@@ -165,7 +165,7 @@ export function Users() {
                 <select id={id} name="familyId" required>
                   <option value="" disabled selected>Select a Family...</option>
                   {families.map(fam => (
-                    <option key={fam.id} value={fam.id}>{fam.name}</option>
+                    <option key={fam.id} value={fam.id}>{fam.guardianName}</option>
                   ))}
                 </select>
               )}

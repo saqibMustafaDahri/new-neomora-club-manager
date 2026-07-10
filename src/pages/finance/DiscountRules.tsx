@@ -86,7 +86,7 @@ export function DiscountRules() {
     { 
       key: 'discountPct', 
       label: 'Discount',
-      render: (val) => <Badge variant="success">{val}% Off</Badge>
+      render: (val) => <Badge variant="success">{val as number}% Off</Badge>
     },
     {
       key: 'active',

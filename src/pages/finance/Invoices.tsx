@@ -13,7 +13,7 @@ const PAYMENT_METHODS: Record<string, string> = {
 };
 
 export function Invoices() {
-  const { invoices, registrations, students, programs, terms, locations, payments, families } = useDataStore();
+  const { invoices, registrations, students, programs, terms, locations, payments } = useDataStore();
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 

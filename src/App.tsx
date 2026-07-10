@@ -1,7 +1,6 @@
 import { Navigate, BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppShell } from './components/layout/AppShell';
 import { LoginSelect } from './pages/LoginSelect';
-import { Placeholder } from './pages/Placeholder';
 import { UIKit } from './pages/UIKit';
 import {
   superAdminNav,

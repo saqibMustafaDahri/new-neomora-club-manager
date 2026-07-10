@@ -6,7 +6,6 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
 import { FormField } from '../../components/ui/FormField';
-import type { RateCard } from '../../types';
 
 export function RateCards() {
   const { rateCards, programs } = useDataStore();

@@ -99,7 +99,7 @@ export function Payments() {
                 </div>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                {inv.hasFlag && <AlertTriangle className="w-4 h-4 text-warning" title="Payment missing info" />}
+                {inv.hasFlag && <AlertTriangle className="w-4 h-4 text-warning" aria-label="Payment missing info" />}
                 <Badge variant={inv.status === 'Paid' ? 'success' : inv.status === 'Partial' ? 'warning' : 'danger'}>
                   {inv.status}
                 </Badge>

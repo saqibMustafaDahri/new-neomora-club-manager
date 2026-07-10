@@ -5,7 +5,7 @@ import { DataTable, type Column } from '../../components/ui/DataTable';
 import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
-import type { Term, Season } from '../../types';
+import type { Term } from '../../types';
 
 export function SeasonsTerms() {
   const { seasons, terms, locations } = useDataStore();

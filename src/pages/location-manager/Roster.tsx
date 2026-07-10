@@ -4,7 +4,7 @@ import { selectScopedStudents, selectScopedRegistrations } from '../../store/sel
 import { DataTable, type Column } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
-import type { Student, Registration } from '../../types';
+import type { Student } from '../../types';
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 

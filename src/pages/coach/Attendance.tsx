@@ -10,7 +10,7 @@ const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 type AttendanceStatus = 'present' | 'absent' | 'excused';
 
 export function AttendancePage() {
-  const { cohorts, pitches, locations, sessionEnrollments, registrations, students, attendances, terms } = useDataStore();
+  const { cohorts, pitches, sessionEnrollments, registrations, students, attendances, terms } = useDataStore();
   const { success } = useToast();
   const assignedSessions = selectCoachSessions();
 

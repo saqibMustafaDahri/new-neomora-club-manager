@@ -66,7 +66,7 @@ export function Register() {
   // Per-commitment-term discount preview for radios
   const commitmentOptions = useMemo(() => {
     const selectedTerm = terms.find(t => t.id === termId);
-    if (!selectedTerm) return [1, 2, 3].map(n => ({ terms: n, discountPct: 0 }));
+    if (!selectedTerm) return [1, 2, 3].map(n => ({ terms: n, weeks: undefined as number | undefined, discountPct: 0 }));
     return [1, 2, 3].map(n => {
       const committedWeeks = n * selectedTerm.totalWeeks;
       const termRules = discountRules.filter(dr => dr.type === 'term_commitment' && dr.active);
@@ -76,7 +76,7 @@ export function Register() {
           pct = Math.max(pct, rule.discountPct);
         }
       }
-      return { terms: n, weeks: committedWeeks, discountPct: pct };
+      return { terms: n, weeks: committedWeeks as number | undefined, discountPct: pct };
     });
   }, [termId, terms, discountRules]);
 

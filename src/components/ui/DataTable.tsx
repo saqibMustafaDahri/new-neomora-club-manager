@@ -10,7 +10,7 @@ export interface Column<T = Record<string, unknown>> {
   width?: string;
 }
 
-interface DataTableProps<T extends Record<string, unknown>> {
+interface DataTableProps<T extends object> {
   columns: Column<T>[];
   rows: T[];
   onRowClick?: (row: T) => void;
@@ -21,7 +21,7 @@ interface DataTableProps<T extends Record<string, unknown>> {
 
 type SortDir = 'asc' | 'desc' | null;
 
-export function DataTable<T extends Record<string, unknown>>({
+export function DataTable<T extends object>({
   columns,
   rows,
   onRowClick,
@@ -50,15 +50,15 @@ export function DataTable<T extends Record<string, unknown>>({
     const q = query.toLowerCase();
     const keys = searchKeys ?? columns.map((c) => c.key);
     return rows.filter((row) =>
-      keys.some((k) => String(row[k] ?? '').toLowerCase().includes(q)),
+      keys.some((k) => String((row as Record<string, unknown>)[k] ?? '').toLowerCase().includes(q)),
     );
   }, [rows, query, searchKeys, columns]);
 
   const sorted = useMemo(() => {
     if (!sortKey || !sortDir) return filtered;
     return [...filtered].sort((a, b) => {
-      const av = a[sortKey] ?? '';
-      const bv = b[sortKey] ?? '';
+      const av = (a as Record<string, unknown>)[sortKey] ?? '';
+      const bv = (b as Record<string, unknown>)[sortKey] ?? '';
       const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true });
       return sortDir === 'asc' ? cmp : -cmp;
     });
@@ -134,8 +134,8 @@ export function DataTable<T extends Record<string, unknown>>({
                     {columns.map((col) => (
                       <td key={col.key} className="px-4 py-3 text-text">
                         {col.render
-                          ? col.render(row[col.key], row)
-                          : String(row[col.key] ?? '—')}
+                          ? col.render((row as Record<string, unknown>)[col.key], row)
+                          : String((row as Record<string, unknown>)[col.key] ?? '—')}
                       </td>
                     ))}
                   </tr>

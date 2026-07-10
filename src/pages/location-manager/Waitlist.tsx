@@ -51,7 +51,7 @@ export function Waitlist() {
     e.preventDefault();
     if (!promotingEntry) return;
 
-    const fd = new FormData(e.currentTarget);
+
     const selectedSessionIds = Array.from(e.currentTarget.querySelectorAll('input[name="sessionIds"]:checked'))
         .map(input => (input as HTMLInputElement).value);
     
