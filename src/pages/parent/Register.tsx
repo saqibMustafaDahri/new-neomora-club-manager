@@ -125,7 +125,7 @@ export function Register() {
   const selectedRateCard = useMemo(() => rateCards.find(rc => rc.programId === programId), [rateCards, programId]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-text">Register for a Programme</h1>
         <p className="text-text-muted mt-1">Select a programme for your child. The invoice is calculated live.</p>

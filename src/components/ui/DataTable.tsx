@@ -153,7 +153,7 @@
 //     </div>
 //   );
 // }
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronsUpDown, Search } from 'lucide-react';
 import { EmptyState } from './EmptyState';
 
@@ -185,6 +185,7 @@ interface DataTableProps<T extends object> {
   emptyMessage?: string;
   /** Optional dropdown filters rendered next to the search box (e.g. Location, Status). */
   filters?: FilterConfig[];
+  pageSize?: number;
 }
 
 type SortDir = 'asc' | 'desc' | null;
@@ -197,11 +198,13 @@ export function DataTable<T extends object>({
   searchKeys,
   emptyMessage = 'No records found.',
   filters,
+  pageSize,
 }: DataTableProps<T>) {
   const [query, setQuery] = useState('');
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(1);
 
   function handleSort(key: string) {
     if (sortKey !== key) {
@@ -254,6 +257,21 @@ export function DataTable<T extends object>({
       return sortDir === 'asc' ? cmp : -cmp;
     });
   }, [filtered, sortKey, sortDir]);
+
+  const totalPages = pageSize ? Math.max(1, Math.ceil(sorted.length / pageSize)) : 1;
+
+  useEffect(() => {
+    if (!pageSize) {
+      setPage(1);
+      return;
+    }
+
+    setPage((current) => Math.min(current, totalPages));
+  }, [pageSize, totalPages]);
+
+  const pagedRows = pageSize ? sorted.slice((page - 1) * pageSize, page * pageSize) : sorted;
+  const startIndex = pageSize && pagedRows.length > 0 ? (page - 1) * pageSize + 1 : 0;
+  const endIndex = pageSize ? Math.min(page * pageSize, sorted.length) : sorted.length;
 
   function SortIcon({ colKey }: { colKey: string }) {
     if (sortKey !== colKey) return <ChevronsUpDown className="w-3.5 h-3.5 opacity-40" />;
@@ -324,16 +342,16 @@ export function DataTable<T extends object>({
               </tr>
             </thead>
             <tbody className="bg-surface divide-y divide-border">
-              {sorted.length === 0 ? (
+              {pagedRows.length === 0 ? (
                 <tr>
                   <td colSpan={columns.length} className="py-16">
                     <EmptyState message={emptyMessage} />
                   </td>
                 </tr>
               ) : (
-                sorted.map((row, i) => (
+                pagedRows.map((row, i) => (
                   <tr
-                    key={i}
+                    key={pageSize ? (page - 1) * pageSize + i : i}
                     onClick={() => onRowClick?.(row)}
                     className={`transition-colors ${onRowClick
                       ? 'cursor-pointer hover:bg-primary/5'
@@ -354,8 +372,36 @@ export function DataTable<T extends object>({
           </table>
         </div>
         {sorted.length > 0 && (
-          <div className="px-4 py-2 border-t border-border bg-surface-muted/30 text-xs text-text-muted">
-            {sorted.length} of {rows.length} record{rows.length !== 1 ? 's' : ''}
+          <div className="flex flex-col gap-3 border-t border-border bg-surface-muted/30 px-4 py-3 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              {pageSize
+                ? `Showing ${startIndex}-${endIndex} of ${sorted.length} record${sorted.length !== 1 ? 's' : ''}`
+                : `${sorted.length} of ${rows.length} record${rows.length !== 1 ? 's' : ''}`}
+            </div>
+
+            {pageSize && totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPage((current) => Math.max(current - 1, 1))}
+                  disabled={page === 1}
+                  className="rounded-md border border-border bg-background px-3 py-1.5 font-medium text-text transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Prev
+                </button>
+                <span className="min-w-24 text-center font-medium text-text">
+                  Page {page} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPage((current) => Math.min(current + 1, totalPages))}
+                  disabled={page === totalPages}
+                  className="rounded-md border border-border bg-background px-3 py-1.5 font-medium text-text transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

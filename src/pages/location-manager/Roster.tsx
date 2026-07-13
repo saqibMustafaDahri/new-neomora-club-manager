@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useDataStore } from '../../store/dataStore';
 import { selectScopedStudents, selectScopedRegistrations } from '../../store/selectors';
-import { DataTable, type Column } from '../../components/ui/DataTable';
+import { DataTable, type Column, type FilterConfig } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import type { Student } from '../../types';
@@ -62,6 +62,24 @@ export function Roster() {
     }
   ];
 
+  const filters: FilterConfig[] = useMemo(() => [
+    {
+      key: 'cohortName',
+      label: 'cohorts',
+      options: cohorts.map((cohort) => ({ value: cohort.label, label: cohort.label })),
+    },
+    {
+      key: 'paymentStatus',
+      label: 'payment statuses',
+      options: [
+        { value: 'Paid', label: 'Paid' },
+        { value: 'Partial', label: 'Partial' },
+        { value: 'Unpaid', label: 'Unpaid' },
+        { value: 'No Invoice', label: 'No Invoice' },
+      ],
+    },
+  ], [cohorts]);
+
   // Derive the active enrollments for the selected student
   const selectedStudentSessions = useMemo(() => {
     if (!selectedStudent) return [];
@@ -94,6 +112,8 @@ export function Roster() {
           onRowClick={(row) => setSelectedStudent(row)}
           searchPlaceholder="Search students or guardians..."
           searchKeys={['name', 'contact', 'cohortName']}
+          filters={filters}
+          pageSize={20}
         />
       </div>
 

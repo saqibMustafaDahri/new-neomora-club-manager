@@ -61,7 +61,7 @@ export function ParentSchedule() {
   }, [studentSessions]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-text">Schedule</h1>
         <p className="text-text-muted mt-1">Your child's weekly schedule and attendance history.</p>

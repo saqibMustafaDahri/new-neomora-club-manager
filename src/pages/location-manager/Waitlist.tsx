@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useDataStore, WaitlistEntryActions, RegistrationActions, SessionEnrollmentActions } from '../../store/dataStore';
 import { selectScopedStudents, selectScopedSessionTemplates } from '../../store/selectors';
-import { DataTable, type Column } from '../../components/ui/DataTable';
+import { DataTable, type Column, type FilterConfig } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
@@ -131,6 +131,22 @@ export function Waitlist() {
     }
   ];
 
+  const filters: FilterConfig[] = useMemo(() => [
+    {
+      key: 'cohortName',
+      label: 'cohorts',
+      options: cohorts.map((cohort) => ({ value: cohort.label, label: cohort.label })),
+    },
+    {
+      key: 'status',
+      label: 'statuses',
+      options: [
+        { value: 'pending', label: 'Pending' },
+        { value: 'admitted', label: 'Admitted' },
+      ],
+    },
+  ], [cohorts]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -144,6 +160,8 @@ export function Waitlist() {
           rows={tableData}
           searchPlaceholder="Search waitlist by name..."
           searchKeys={['studentName', 'cohortName']}
+          filters={filters}
+          pageSize={20}
         />
       </div>
 
