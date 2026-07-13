@@ -11,15 +11,15 @@ import type { User, Role } from '../../types';
 export function Users() {
   const { users, locations, families } = useDataStore();
   const { success } = useToast();
-  
+
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>('parent');
 
   const columns: Column<User>[] = [
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email' },
-    { 
-      key: 'role', 
+    {
+      key: 'role',
       label: 'Role',
       render: (val) => {
         let variant: 'success' | 'warning' | 'danger' | 'info' | 'neutral' = 'neutral';
@@ -27,7 +27,7 @@ export function Users() {
         else if (val === 'locationManager') variant = 'warning';
         else if (val === 'financeOfficer') variant = 'success';
         else if (val === 'coach') variant = 'info';
-        
+
         return <Badge variant={variant}>{String(val)}</Badge>;
       }
     },
@@ -42,7 +42,7 @@ export function Users() {
           const family = families.find(f => f.id === row.familyId);
           return <span className="text-text-muted text-sm">Family: {family?.guardianName || 'None'}</span>;
         }
-        
+
         const scopeNames = (val as string[]).map(id => locations.find(l => l.id === id)?.name).filter(Boolean);
         if (scopeNames.length === 0) return <span className="text-text-muted text-sm">No Locations</span>;
         return <span className="text-text text-sm truncate max-w-[200px] block">{scopeNames.join(', ')}</span>;
@@ -55,10 +55,10 @@ export function Users() {
     const fd = new FormData(e.currentTarget);
     const name = fd.get('name') as string;
     const email = fd.get('email') as string;
-    
+
     // We get role from state to match what was rendered.
     const role = selectedRole;
-    
+
     let locationScope: string[] = [];
     let familyId: string | null = null;
 
@@ -72,7 +72,7 @@ export function Users() {
     }
 
     const id = `user_${Date.now()}`;
-    
+
     UserActions.add({
       id,
       name,
@@ -116,7 +116,7 @@ export function Users() {
         title="Add User"
       >
         <form id="user-form" onSubmit={handleSubmit} className="space-y-4 py-2">
-          
+
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Full Name" required>
               {(id) => <input id={id} name="name" type="text" placeholder="e.g. Sarah Connor" required />}
@@ -125,12 +125,12 @@ export function Users() {
               {(id) => <input id={id} name="email" type="email" placeholder="e.g. sarah@example.com" required />}
             </FormField>
           </div>
-          
+
           <FormField label="Role" required>
             {(id) => (
-              <select 
-                id={id} 
-                name="role" 
+              <select
+                id={id}
+                name="role"
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value as Role)}
                 required
@@ -178,7 +178,7 @@ export function Users() {
               <p className="text-sm text-primary">This role grants access to all locations and settings.</p>
             </div>
           )}
-          
+
           <div className="pt-4 flex justify-end gap-3 border-t border-border mt-6">
             <button
               type="button"

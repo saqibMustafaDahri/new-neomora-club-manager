@@ -14,6 +14,10 @@ import { Locations as SuperAdminLocations } from './pages/super-admin/Locations'
 import { SeasonsTerms as SuperAdminSeasonsTerms } from './pages/super-admin/SeasonsTerms';
 import { Programs as SuperAdminPrograms } from './pages/super-admin/Programs';
 import { Users as SuperAdminUsers } from './pages/super-admin/Users';
+import { Reports as SuperAdminReports } from './pages/super-admin/Reports';
+import { Settings as SuperAdminSettings } from './pages/super-admin/Settings';
+import { Register as SuperAdminRegister } from './pages/super-admin/Register';
+import { RegistrationForm as SuperAdminRegistrationForm } from './pages/super-admin/RegistrationForm';
 import { Schedule as LocationManagerSchedule } from './pages/location-manager/Schedule';
 import { Roster as LocationManagerRoster } from './pages/location-manager/Roster';
 import { Waitlist as LocationManagerWaitlist } from './pages/location-manager/Waitlist';
@@ -49,6 +53,10 @@ function App() {
           <Route path="seasons-terms" element={<SuperAdminSeasonsTerms />} />
           <Route path="programs" element={<SuperAdminPrograms />} />
           <Route path="users" element={<SuperAdminUsers />} />
+          <Route path="reports" element={<SuperAdminReports />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+          <Route path="register" element={<SuperAdminRegister />} />
+          <Route path="register-form" element={<SuperAdminRegistrationForm />} />
         </Route>
 
         {/* ── Location Manager ────────────────────────────── */}

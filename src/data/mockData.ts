@@ -5,7 +5,7 @@ import type {
 } from '../types';
 
 export const mockOrganizations: Organization[] = [
-  { id: 'org_1', name: 'Neomo Sports Academy' }
+  { id: 'org_1', name: 'Neomora Club Manager' }
 ];
 
 export const mockLocations: Location[] = [

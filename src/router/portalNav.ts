@@ -18,6 +18,9 @@ import {
   Home,
   UserPlus,
   Banknote,
+  Settings,
+  BarChart3,
+  // FilePlus
 } from 'lucide-react';
 import type { NavItem } from '../components/layout/Sidebar';
 
@@ -27,6 +30,12 @@ export const superAdminNav: NavItem[] = [
   { label: 'Seasons & Terms', icon: CalendarDays, path: '/super-admin/seasons-terms' },
   { label: 'Programs', icon: BookOpen, path: '/super-admin/programs' },
   { label: 'Users', icon: Users, path: '/super-admin/users' },
+  { label: 'Participants', icon: UserPlus, path: '/super-admin/register' },
+  // { label: 'Registration Form', icon: FilePlus, path: '/super-admin/register-form' },
+  { label: 'Reports', icon: BarChart3, path: '/super-admin/reports' },
+  { label: 'Settings', icon: Settings, path: '/super-admin/settings' },
+
+
 ];
 
 export const locationManagerNav: NavItem[] = [

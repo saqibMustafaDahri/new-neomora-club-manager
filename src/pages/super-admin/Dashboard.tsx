@@ -16,7 +16,7 @@ export function Dashboard() {
   const tableData = useMemo(() => {
     // Group active registrations by locationId and termId
     const groups: Record<string, { locationName: string; termName: string; count: number }> = {};
-    
+
     for (const reg of activeRegistrations) {
       const term = terms.find(t => t.id === reg.termId);
       if (!term) continue;
@@ -40,8 +40,8 @@ export function Dashboard() {
   const columns: Column<typeof tableData[0]>[] = [
     { key: 'locationName', label: 'Location' },
     { key: 'termName', label: 'Term' },
-    { 
-      key: 'count', 
+    {
+      key: 'count',
       label: 'Active Registrations',
       render: (val) => <Badge variant="info">{String(val)}</Badge>
     },
@@ -66,10 +66,10 @@ export function Dashboard() {
           <h2 className="text-lg font-semibold text-text">Registrations per Location</h2>
         </div>
         <div className="p-6">
-          <DataTable 
-            columns={columns} 
-            rows={tableData} 
-            searchPlaceholder="Search locations or terms..." 
+          <DataTable
+            columns={columns}
+            rows={tableData}
+            searchPlaceholder="Search locations or terms..."
           />
         </div>
       </div>
