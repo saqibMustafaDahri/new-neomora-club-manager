@@ -159,7 +159,7 @@ export function AttendancePage() {
           <select
             value={selectedSessionId}
             onChange={e => setSelectedSessionId(e.target.value)}
-            className="text-sm bg-background border border-border rounded-md px-3 py-2 text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            className="text-sm bg-red-400 border border-border rounded-md px-3 py-2 text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
           >
             {assignedSessions.map(s => (
               <option key={s.id} value={s.id}>{sessionLabel(s)}</option>

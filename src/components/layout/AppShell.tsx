@@ -6,16 +6,17 @@ import type { NavItem } from './Sidebar';
 
 interface AppShellProps {
   navItems: NavItem[];
+  notificationTo?: string;
 }
 
-export function AppShell({ navItems }: AppShellProps) {
+export function AppShell({ navItems, notificationTo }: AppShellProps) {
   return (
     <ToastProvider>
       <div className="flex h-screen overflow-hidden bg-background">
         <Sidebar navItems={navItems} />
 
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          <Topbar />
+          <Topbar notificationTo={notificationTo} />
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
             <Outlet />

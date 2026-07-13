@@ -8,9 +8,10 @@ interface TopbarProps {
   navItems?: NavItem[];
   portalTitle?: string;
   hideSearch?: boolean;
+  notificationTo?: string;
 }
 
-export function Topbar({ navItems, portalTitle = 'Guardian Portal', hideSearch = false }: TopbarProps) {
+export function Topbar({ navItems, portalTitle = 'Guardian Portal', hideSearch = false, notificationTo }: TopbarProps) {
   const currentUser = useDataStore((state) => state.currentUser);
   const location = useLocation();
 
@@ -129,10 +130,22 @@ export function Topbar({ navItems, portalTitle = 'Guardian Portal', hideSearch =
 
         {/* <div className="h-6 w-px bg-border hidden sm:block"></div> */}
 
-        <button className="relative text-text-muted hover:text-text transition-colors">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full border border-surface"></span>
-        </button>
+        {notificationTo ? (
+          <Link
+            to={notificationTo}
+            className="relative text-text-muted hover:text-text transition-colors"
+            aria-label="Notifications"
+            title="Notifications"
+          >
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full border border-surface"></span>
+          </Link>
+        ) : (
+          <button className="relative text-text-muted hover:text-text transition-colors" type="button">
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full border border-surface"></span>
+          </button>
+        )}
 
         {/* <div className="flex items-center gap-3 pl-2">
           <div className="hidden text-right sm:block">
