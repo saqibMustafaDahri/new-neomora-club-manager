@@ -5,7 +5,7 @@ const mockLocations = [
     { id: 2, name: "Riyadh Sports Hub" }
 ];
 
-const events = ["Registration", "Document Request", "Fee Invoice", "Payment Reminder", "Session Start"];
+// const events = ["Registration", "Document Request", "Fee Invoice", "Payment Reminder", "Session Start"];
 const gateways = [
     { name: "Secure Payments", connected: true },
     { name: "PayTabs", connected: false },
@@ -93,32 +93,32 @@ export function Settings() {
         </Card>
     );
 
-    const notificationsContent = (
-        <Card title="Notification Channels">
-            <table className="w-full text-sm">
-                <thead>
-                    <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wide text-text-muted">
-                        <th className="py-2">Event</th>
-                        <th className="w-32 py-2 text-center">WhatsApp</th>
-                        <th className="w-32 py-2 text-center">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {events.map((ev, i) => (
-                        <tr key={ev} className="border-b border-border last:border-0">
-                            <td className="py-3 font-medium text-text">{ev}</td>
-                            <td className="py-3 text-center">
-                                <input type="checkbox" defaultChecked={i % 2 === 0} className="w-4 h-4 accent-primary" />
-                            </td>
-                            <td className="py-3 text-center">
-                                <input type="checkbox" defaultChecked className="w-4 h-4 accent-primary" />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </Card>
-    );
+    // const notificationsContent = (
+    //     <Card title="Notification Channels">
+    //         <table className="w-full text-sm">
+    //             <thead>
+    //                 <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wide text-text-muted">
+    //                     <th className="py-2">Event</th>
+    //                     <th className="w-32 py-2 text-center">WhatsApp</th>
+    //                     <th className="w-32 py-2 text-center">Email</th>
+    //                 </tr>
+    //             </thead>
+    //             <tbody>
+    //                 {events.map((ev, i) => (
+    //                     <tr key={ev} className="border-b border-border last:border-0">
+    //                         <td className="py-3 font-medium text-text">{ev}</td>
+    //                         <td className="py-3 text-center">
+    //                             <input type="checkbox" defaultChecked={i % 2 === 0} className="w-4 h-4 accent-primary" />
+    //                         </td>
+    //                         <td className="py-3 text-center">
+    //                             <input type="checkbox" defaultChecked className="w-4 h-4 accent-primary" />
+    //                         </td>
+    //                     </tr>
+    //                 ))}
+    //             </tbody>
+    //         </table>
+    //     </Card>
+    // );
 
     const gatewaysContent = (
         <div className="grid gap-4 md:grid-cols-3">
@@ -145,7 +145,7 @@ export function Settings() {
             <Field label="Interface Language">
                 <select className="flex h-10 w-48 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                     <option value="en">English</option>
-                    <option value="ar">العربية</option>
+                    {/* <option value="ar">العربية</option> */}
                 </select>
             </Field>
             <div className="space-y-3 pt-3">
@@ -156,7 +156,7 @@ export function Settings() {
                             <span className="text-sm font-medium text-text">{l.name}</span>
                             <select className="flex h-10 w-40 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                                 <option value="en">English</option>
-                                <option value="ar">العربية</option>
+                                {/* <option value="ar">العربية</option> */}
                             </select>
                         </div>
                     ))}
@@ -167,7 +167,7 @@ export function Settings() {
 
     const tabsData = [
         { id: "general", label: "General", content: generalContent },
-        { id: "notifications", label: "Notifications", content: notificationsContent },
+        // { id: "notifications", label: "Notifications", content: notificationsContent },
         { id: "gateways", label: "Payment Gateways", content: gatewaysContent },
         { id: "localisation", label: "Localisation", content: localisationContent },
     ];

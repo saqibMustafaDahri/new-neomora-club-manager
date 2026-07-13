@@ -894,7 +894,7 @@ function AutomationsTab() {
     <div className="space-y-6">
       <div className="flex items-start gap-2.5 bg-warning/5 border border-warning/20 rounded-md p-3 text-xs text-text-muted">
         <Info className="w-4 h-4 text-warning shrink-0 mt-0.5" />
-        <span>This is a configuration UI only - nothing here is connected to a real WhatsApp Business Account or email provider yet. It matches how the real WhatsApp Cloud API works so a real integration can slot in later without a redesign.</span>
+        <span>WhatsApp Business Account not connected yet</span>
       </div>
 
       <div className="bg-surface rounded-lg border border-border shadow-sm p-5">
