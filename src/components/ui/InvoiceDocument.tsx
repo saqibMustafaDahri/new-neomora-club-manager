@@ -166,7 +166,7 @@ export function InvoiceDocument({ registrationId, onClose }: InvoiceDocumentProp
     }
 
     return (
-        <Modal isOpen onClose={onClose} title={`Invoice ${invoice.id}`} width="lg">
+        <Modal isOpen onClose={onClose} title={`Invoice ${invoice.id}`} width="xl">
             <div className="space-y-6">
                 <div className="flex items-center justify-end -mt-2 mb-2">
                     <button
@@ -259,8 +259,8 @@ export function InvoiceDocument({ registrationId, onClose }: InvoiceDocumentProp
                         <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Payment History</p>
                         <span
                             className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${status === 'Paid' ? 'bg-success/10 text-success border-success/30'
-                                    : status === 'Partial' ? 'bg-warning/10 text-warning border-warning/30'
-                                        : 'bg-danger/10 text-danger border-danger/30'
+                                : status === 'Partial' ? 'bg-warning/10 text-warning border-warning/30'
+                                    : 'bg-danger/10 text-danger border-danger/30'
                                 }`}
                         >
                             {status}
