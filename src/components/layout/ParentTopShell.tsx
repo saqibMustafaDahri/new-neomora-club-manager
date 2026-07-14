@@ -1,27 +1,3 @@
-// import { Outlet } from 'react-router-dom';
-// import { ToastProvider } from '../ui/Toast';
-// import { Topbar } from './Topbar';
-// import type { NavItem } from './Sidebar';
-
-// interface ParentShellProps {
-//   navItems: NavItem[];
-// }
-
-// export function ParentShell({ navItems }: ParentShellProps) {
-//   return (
-//     <ToastProvider>
-//       <div className="flex min-h-screen flex-col bg-background">
-//         <Topbar navItems={navItems} portalTitle="Guardian Portal" hideSearch />
-
-//         <main className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6 lg:p-8">
-//           <Outlet />
-//         </main>
-//       </div>
-//     </ToastProvider>
-//   );
-// }
-
-
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Bell, LogOut } from 'lucide-react';
 import clsx from 'clsx';

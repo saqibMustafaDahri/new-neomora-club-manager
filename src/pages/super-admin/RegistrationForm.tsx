@@ -18,16 +18,6 @@ export function RegistrationForm() {
     // Check if required fields are filled to show calculation
     const isCalculationUnblocked = location !== '' && program !== '' && term !== '' && joinDate !== '';
 
-    // Dummy calculation engine
-    // Screenshot matches: 
-    // weeks billed = 31
-    // Base amount after discount = 6417.00
-    // Discount = 10% (713.00)
-    // Kit fee = 250
-    // Reg fee = 150
-    // VAT = 1022.55
-    // Total = 7839.55
-
     // Let's make a simple dynamic calculation based on state
     let weeksBilled = commitment * 10 + (commitment === 3 ? 1 : 0); // 31 weeks for 3 terms
     const baseBeforeDiscount = weeksBilled * (7130 / 31); // 7130

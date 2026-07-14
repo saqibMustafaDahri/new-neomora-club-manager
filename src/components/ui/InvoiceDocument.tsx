@@ -20,11 +20,6 @@ interface InvoiceDocumentProps {
     onClose: () => void;
 }
 
-/**
- * A single, shared invoice view used identically from Super Admin, Finance, and Parent -
- * every portal renders exactly the same document for the same transaction, since it reads
- * straight from the shared store rather than each portal keeping its own copy.
- */
 export function InvoiceDocument({ registrationId, onClose }: InvoiceDocumentProps) {
     const organizations = useDataStore((s) => s.organizations);
     const students = useDataStore((s) => s.students);

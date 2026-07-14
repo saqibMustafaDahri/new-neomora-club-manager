@@ -1,9 +1,5 @@
 import { Megaphone, Calendar, CreditCard, Info } from 'lucide-react';
 
-// Sample announcements only - no source spreadsheet contains any notification or announcement
-// data, so nothing here is derived from real records. This is a UI shell to demonstrate the
-// tab; a real version would need an Announcement/Notification entity added to the schema and
-// populated by the academy.
 const SAMPLE_NOTIFICATIONS = [
   {
     id: 'n1',
