@@ -20,8 +20,6 @@
 //     </ToastProvider>
 //   );
 // }
-
-
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Bell, LogOut } from 'lucide-react';
 import clsx from 'clsx';
