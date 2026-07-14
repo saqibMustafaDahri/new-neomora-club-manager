@@ -77,3 +77,35 @@ export function selectCoachSessions() {
     .map((ca) => ca.sessionTemplateId);
   return sessionTemplates.filter((st) => assignedIds.includes(st.id));
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Season-aware selectors. Season only has a direct link to Term - everything
+// else (Registration, Invoice, Payment, a Student's registration history) is
+// season-scoped indirectly, through whichever Term a Registration points at.
+// These helpers are the single place that logic lives, so every page filters
+// registrations/invoices/students the same way instead of re-deriving it.
+// ─────────────────────────────────────────────────────────────────────────
+
+// Terms belonging to the currently selected season ('all' = every term)
+export function selectTermsForSelectedSeason() {
+  const { terms, selectedSeasonId } = useDataStore.getState();
+  if (selectedSeasonId === 'all') return terms;
+  return terms.filter((t) => t.seasonId === selectedSeasonId);
+}
+
+// Filter any list of Registrations (or Registration-like objects with a termId)
+// down to the selected season. Pass in an already-scoped list (e.g.
+// selectScopedRegistrations()) to compose season filtering with location/family scoping.
+export function filterRegistrationsBySelectedSeason<T extends { termId: string }>(registrations: T[]): T[] {
+  const { selectedSeasonId } = useDataStore.getState();
+  if (selectedSeasonId === 'all') return registrations;
+  const termIds = new Set(selectTermsForSelectedSeason().map((t) => t.id));
+  return registrations.filter((r) => termIds.has(r.termId));
+}
+
+// Student IDs that have at least one Registration in the selected season
+export function selectStudentIdsInSelectedSeason(): Set<string> {
+  const { registrations } = useDataStore.getState();
+  const seasonRegs = filterRegistrationsBySelectedSeason(registrations);
+  return new Set(seasonRegs.map((r) => r.studentId));
+}

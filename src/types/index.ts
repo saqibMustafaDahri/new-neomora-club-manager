@@ -400,6 +400,7 @@ export interface RegistrationRequest {
   guardianEmail: string;
   locationId: string;
   programId: string;
+  seasonId: string; // which season the applicant is applying for - set on the public form itself
   preferredCohortLabel: string; // applicant's stated preference - not authoritative, admin confirms on approval
   kitOptIn: boolean;
   message: string;

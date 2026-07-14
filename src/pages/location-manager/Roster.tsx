@@ -165,7 +165,7 @@
 // }
 import { useState, useMemo } from 'react';
 import { useDataStore } from '../../store/dataStore';
-import { selectScopedStudents, selectScopedRegistrations } from '../../store/selectors';
+import { selectScopedStudents, selectScopedRegistrations, filterRegistrationsBySelectedSeason } from '../../store/selectors';
 import { DataTable, type Column, type FilterConfig } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
@@ -181,7 +181,7 @@ const TERM_BADGE_STYLE: Record<string, string> = {
 export function Roster() {
   const { families, cohorts, invoices, payments, sessionEnrollments, sessionTemplates, pitches, terms } = useDataStore();
   const students = selectScopedStudents();
-  const scopedRegistrations = selectScopedRegistrations();
+  const scopedRegistrations = filterRegistrationsBySelectedSeason(selectScopedRegistrations());
 
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 

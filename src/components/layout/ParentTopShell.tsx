@@ -27,6 +27,8 @@ import { Bell, LogOut } from 'lucide-react';
 import clsx from 'clsx';
 import { useDataStore } from '../../store/dataStore';
 import { ToastProvider } from '../ui/Toast';
+import { SeasonSelector } from '../ui/SeasonSelector';
+
 import { parentTopNav } from '../../router/portalNav';
 
 export function ParentTopShell() {
@@ -70,8 +72,12 @@ export function ParentTopShell() {
               ))}
             </nav>
 
-            {/* Right: notifications shortcut + user + sign out */}
+            {/* Right: season + notifications shortcut + user + sign out */}
             <div className="flex items-center gap-4 shrink-0">
+              <SeasonSelector compact />
+
+              <div className="h-6 w-px bg-border hidden sm:block" />
+
               <NavLink to="/parent/notifications" className="relative text-text-muted hover:text-text transition-colors">
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full border border-surface" />

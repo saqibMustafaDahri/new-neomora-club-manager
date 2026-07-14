@@ -532,9 +532,11 @@ function MetricCard({ title, value, change, trend, icon: Icon, isActive, onClick
 export function Reports() {
   const [activeMetric, setActiveMetric] = useState("revenue");
 
-  const registrations = useDataStore((s) => s.registrations);
+  const allRegistrations = useDataStore((s) => s.registrations);
+  const selectedSeasonId = useDataStore((s) => s.selectedSeasonId);
+  const seasons = useDataStore((s) => s.seasons);
   const invoices = useDataStore((s) => s.invoices);
-  const payments = useDataStore((s) => s.payments);
+  const allPayments = useDataStore((s) => s.payments);
   const terms = useDataStore((s) => s.terms);
   const locations = useDataStore((s) => s.locations);
   const pitches = useDataStore((s) => s.pitches);
@@ -546,6 +548,27 @@ export function Reports() {
   const students = useDataStore((s) => s.students);
   const families = useDataStore((s) => s.families);
 
+  // Every revenue/registration/invoice chart below derives from this one filtered list, so
+  // switching the global season selector cascades through all of them at once. Capacity
+  // (SessionTemplate) and Waitlist have no term/season link in the schema at all - they stay
+  // organization-wide regardless of the season filter, same as the Dashboard.
+  const registrations = useMemo(() => {
+    if (selectedSeasonId === "all") return allRegistrations;
+    const seasonTermIds = new Set(terms.filter((t) => t.seasonId === selectedSeasonId).map((t) => t.id));
+    return allRegistrations.filter((r) => seasonTermIds.has(r.termId));
+  }, [allRegistrations, terms, selectedSeasonId]);
+
+  // Payments are filtered the same way, via their invoice's registration - this is what the
+  // Payment Verification chart's unverified-percentage figure depends on.
+  const payments = useMemo(() => {
+    if (selectedSeasonId === "all") return allPayments;
+    const seasonRegIds = new Set(registrations.map((r) => r.id));
+    const seasonInvoiceIds = new Set(invoices.filter((i) => seasonRegIds.has(i.registrationId)).map((i) => i.id));
+    return allPayments.filter((p) => seasonInvoiceIds.has(p.invoiceId));
+  }, [allPayments, invoices, registrations, selectedSeasonId]);
+
+  const currentSeasonName = seasons.find((s) => s.id === selectedSeasonId)?.name;
+
   const data = useMemo(() => {
     const termById = new Map(terms.map((t) => [t.id, t]));
     const locationById = new Map(locations.map((l) => [l.id, l]));
@@ -554,7 +577,7 @@ export function Reports() {
     const cohortById = new Map(cohorts.map((c) => [c.id, c]));
     const programById = new Map(programs.map((p) => [p.id, p]));
 
-    const totalRevenue = invoices.reduce((sum, i) => sum + i.total, 0);
+    const totalRevenue = registrations.reduce((sum, r) => sum + (invoiceByRegId.get(r.id)?.total ?? 0), 0);
     const activeStudentIds = new Set(registrations.filter((r) => r.status === "active").map((r) => r.studentId));
     const avgRevenuePerStudent = activeStudentIds.size > 0 ? totalRevenue / activeStudentIds.size : 0;
 
@@ -773,6 +796,9 @@ export function Reports() {
         <div>
           <h1 className="text-2xl font-bold text-text">Reports</h1>
           <p className="text-sm text-text-muted mt-1">Analytics and performance insights</p>
+          <p className="text-xs text-text-muted mt-1">
+            {selectedSeasonId === "all" ? "Showing all seasons combined" : `Showing ${currentSeasonName ?? "the selected season"}`} - change this from the season selector in the top bar. Capacity and waitlist figures are always organization-wide, since they aren't tied to a specific season.
+          </p>
         </div>
       </div>
 
@@ -1004,7 +1030,7 @@ export function Reports() {
             </div>
           </Panel>
 
-          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(0)}% of payments have no bank reference on file`}>
+          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(1)}% of payments have no bank reference on file`}>
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>

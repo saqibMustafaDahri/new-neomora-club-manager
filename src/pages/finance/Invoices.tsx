@@ -500,11 +500,11 @@
 //   );
 // }
 
-
 import { useMemo, useState } from 'react';
 import { ChevronRight, SaudiRiyal } from 'lucide-react';
 import { DataTable, type Column, type FilterConfig } from '../../components/ui/DataTable';
 import { useDataStore } from '../../store/dataStore';
+import { filterRegistrationsBySelectedSeason } from '../../store/selectors';
 import { Modal } from '../../components/ui/Modal';
 import { InvoiceDocument } from '../../components/ui/InvoiceDocument';
 
@@ -552,12 +552,18 @@ const TERM_BADGE_STYLE: Record<TermEntry['status'], string> = {
 export function Invoices() {
   const students = useDataStore((s) => s.students);
   const families = useDataStore((s) => s.families);
-  const registrations = useDataStore((s) => s.registrations);
+  const allRegistrations = useDataStore((s) => s.registrations);
   const invoices = useDataStore((s) => s.invoices);
   const payments = useDataStore((s) => s.payments);
   const programs = useDataStore((s) => s.programs);
   const terms = useDataStore((s) => s.terms);
   const locations = useDataStore((s) => s.locations);
+  const selectedSeasonId = useDataStore((s) => s.selectedSeasonId);
+
+  const registrations = useMemo(
+    () => filterRegistrationsBySelectedSeason(allRegistrations),
+    [allRegistrations, selectedSeasonId]
+  );
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [viewingInvoiceRegId, setViewingInvoiceRegId] = useState<string | null>(null);

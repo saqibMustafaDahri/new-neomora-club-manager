@@ -486,11 +486,11 @@
 
 
 
-
 import { useMemo, useState } from 'react';
 import { Plus, ChevronRight, SaudiRiyal } from 'lucide-react';
 import { DataTable, type Column, type FilterConfig } from '../../components/ui/DataTable';
 import { useDataStore } from '../../store/dataStore';
+import { filterRegistrationsBySelectedSeason } from '../../store/selectors';
 import { Modal } from '../../components/ui/Modal';
 import { InvoiceDocument } from '../../components/ui/InvoiceDocument';
 import { Link } from 'react-router-dom';
@@ -539,12 +539,20 @@ const TERM_BADGE_STYLE: Record<TermEntry['status'], string> = {
 export function Register() {
     const students = useDataStore((s) => s.students);
     const families = useDataStore((s) => s.families);
-    const registrations = useDataStore((s) => s.registrations);
+    const allRegistrations = useDataStore((s) => s.registrations);
     const invoices = useDataStore((s) => s.invoices);
     const payments = useDataStore((s) => s.payments);
     const programs = useDataStore((s) => s.programs);
     const terms = useDataStore((s) => s.terms);
     const locations = useDataStore((s) => s.locations);
+    const selectedSeasonId = useDataStore((s) => s.selectedSeasonId);
+
+    // Scoped to whichever season is selected in the top bar - a student with no registration in
+    // that season simply won't appear in this list at all.
+    const registrations = useMemo(
+        () => filterRegistrationsBySelectedSeason(allRegistrations),
+        [allRegistrations, selectedSeasonId]
+    );
 
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [viewingInvoiceRegId, setViewingInvoiceRegId] = useState<string | null>(null);
@@ -741,7 +749,7 @@ export function Register() {
                 <div className="bg-surface rounded-xl border border-border p-5 shadow-sm">
                     <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Participants</p>
                     <p className="text-2xl font-bold text-text mt-2">{participantRows.length}</p>
-                    <p className="text-xs text-text-muted mt-1">Matching current filters · {registrations.length} total registrations</p>
+                    <p className="text-xs text-text-muted mt-1">Matching current filters · {registrations.length} registrations in the selected season</p>
                 </div>
                 <div className="bg-surface rounded-xl border border-border p-5 shadow-sm">
                     <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">Invoiced</p>

@@ -2,6 +2,7 @@ import { Bell, Search, Menu, Home, ChevronRight, LogOut } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { useDataStore } from '../../store/dataStore';
+import { SeasonSelector } from '../ui/SeasonSelector';
 import type { NavItem } from './Sidebar';
 
 interface TopbarProps {
@@ -61,6 +62,7 @@ export function Topbar({ navItems, portalTitle = 'Guardian Portal', hideSearch =
           </nav>
 
           <div className="flex shrink-0 items-center gap-3">
+            <SeasonSelector compact />
             <div className="text-right leading-tight">
               <p className="text-sm font-semibold text-text">{currentUser?.name || 'Fatima Al-Harbi'}</p>
               <p className="text-xs text-text-muted capitalize">{currentUser?.role || 'Guardian'}</p>
@@ -121,6 +123,7 @@ export function Topbar({ navItems, portalTitle = 'Guardian Portal', hideSearch =
 
       {/* Right: Actions */}
       <div className="flex items-center justify-end gap-6 flex-1">
+        <SeasonSelector compact />
         {/* <button
           onClick={() => navigate('/login-select')}
           className="text-xs font-medium text-text-muted hover:text-primary transition-colors border border-border rounded-md px-3 py-1.5 hover:border-primary/50 hidden sm:block"

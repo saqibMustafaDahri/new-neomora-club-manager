@@ -25,8 +25,26 @@ const TONE_STYLES: Record<NotificationTone, string> = {
 };
 
 export function Notifications() {
-  const { registrations, invoices, payments, students, waitlistEntries, enquiries, cohorts } = useDataStore();
+  const { registrations: allRegistrations, invoices, payments: allPayments, students, waitlistEntries, enquiries, cohorts, terms, seasons, selectedSeasonId } = useDataStore();
   const [tab, setTab] = useState<'alerts' | 'activity'>('alerts');
+
+  // Registrations, and by extension payments (via their invoice's registration), are filtered by
+  // the globally selected season. Waitlist and Enquiries have no term/season link in the schema
+  // at all, so those alerts stay organization-wide regardless of which season is selected.
+  const registrations = useMemo(() => {
+    if (selectedSeasonId === 'all') return allRegistrations;
+    const seasonTermIds = new Set(terms.filter((t) => t.seasonId === selectedSeasonId).map((t) => t.id));
+    return allRegistrations.filter((r) => seasonTermIds.has(r.termId));
+  }, [allRegistrations, terms, selectedSeasonId]);
+
+  const payments = useMemo(() => {
+    if (selectedSeasonId === 'all') return allPayments;
+    const seasonRegIds = new Set(registrations.map((r) => r.id));
+    const seasonInvoiceIds = new Set(invoices.filter((i) => seasonRegIds.has(i.registrationId)).map((i) => i.id));
+    return allPayments.filter((p) => seasonInvoiceIds.has(p.invoiceId));
+  }, [allPayments, invoices, registrations, selectedSeasonId]);
+
+  const currentSeasonName = seasons.find((s) => s.id === selectedSeasonId)?.name;
 
   const data = useMemo(() => {
     const studentById = new Map(students.map((s) => [s.id, s]));
@@ -176,6 +194,9 @@ export function Notifications() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-text">Notifications</h1>
         <p className="text-text-muted mt-1">Real-time alerts and recent activity across the academy.</p>
+        <p className="text-xs text-text-muted mt-1">
+          {selectedSeasonId === 'all' ? 'Showing all seasons combined' : `Showing ${currentSeasonName ?? 'the selected season'}`} for registrations and payments - change this from the season selector in the top bar. Waitlist and enquiry alerts are always organization-wide, since neither is tied to a specific season.
+        </p>
       </div>
 
       <div className="flex gap-2 border-b border-border">

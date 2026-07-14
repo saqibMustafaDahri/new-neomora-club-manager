@@ -8,6 +8,7 @@ export function Apply() {
     const locations = useDataStore((s) => s.locations);
     const programs = useDataStore((s) => s.programs);
     const cohorts = useDataStore((s) => s.cohorts);
+    const seasons = useDataStore((s) => s.seasons);
     const addRequest = useRegistrationRequestsStore((s) => s.addRequest);
 
     const [submitted, setSubmitted] = useState(false);
@@ -20,6 +21,9 @@ export function Apply() {
     const [guardianEmail, setGuardianEmail] = useState('');
     const [locationId, setLocationId] = useState(locations[0]?.id ?? '');
     const [programId, setProgramId] = useState(programs[0]?.id ?? '');
+    // Default to the most recent season - a new applicant is virtually always applying for the
+    // current/upcoming one, not picking through history.
+    const [seasonId, setSeasonId] = useState(seasons[seasons.length - 1]?.id ?? '');
     const [preferredCohortLabel, setPreferredCohortLabel] = useState('');
     const [kitOptIn, setKitOptIn] = useState(false);
     const [message, setMessage] = useState('');
@@ -30,7 +34,7 @@ export function Apply() {
         const request: RegistrationRequest = {
             id,
             studentName, dob, guardianName, guardianPhone, guardianEmail,
-            locationId, programId, preferredCohortLabel, kitOptIn, message,
+            locationId, programId, seasonId, preferredCohortLabel, kitOptIn, message,
             submittedAt: new Date().toISOString(),
             status: 'pending',
         };
@@ -63,9 +67,9 @@ export function Apply() {
     }
 
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4 py-10 ">
-            <div className="max-w-4xl w-full">
-                <div className="text-center mb-6 ">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4 py-10">
+            <div className="max-w-lg w-full">
+                <div className="text-center mb-6">
                     <img src="/neomora-logo.png" alt="Neomora" className="h-8 w-auto mx-auto mb-3" />
                     <h1 className="text-xl font-bold text-text">Registration Request</h1>
                     <p className="text-sm text-text-muted mt-1">
@@ -73,7 +77,7 @@ export function Apply() {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="bg-surface rounded-xl border border-border shadow-sm p-6 space-y-4 ">
+                <form onSubmit={handleSubmit} className="bg-surface rounded-xl border border-border shadow-sm p-6 space-y-4">
                     <div>
                         <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Child's Details</h2>
                         <div className="space-y-3">
@@ -116,6 +120,15 @@ export function Apply() {
 
                     <div className="border-t border-border pt-4">
                         <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Programme</h2>
+                        {seasons.length > 1 && (
+                            <div className="mb-3">
+                                <label className="text-xs font-medium text-text-muted">Season</label>
+                                <select value={seasonId} onChange={(e) => setSeasonId(e.target.value)} required
+                                    className="w-full mt-1 text-sm bg-background border border-border rounded-md px-3 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                                    {seasons.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                                </select>
+                            </div>
+                        )}
                         <div className="grid grid-cols-2 gap-3">
                             <div>
                                 <label className="text-xs font-medium text-text-muted">Location</label>

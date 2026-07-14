@@ -10,7 +10,7 @@ import { useToast } from '../../components/ui/Toast';
 import type { RegistrationRequest } from '../../types';
 
 export function RegistrationRequests() {
-    const { locations, programs, cohorts, cohortRules, terms, rateCards } = useDataStore();
+    const { locations, programs, cohorts, cohortRules, terms, rateCards, selectedSeasonId, seasons } = useDataStore();
     const requests = useRegistrationRequestsStore((s) => s.requests);
     const updateRequest = useRegistrationRequestsStore((s) => s.updateRequest);
     const { success, error } = useToast();
@@ -21,6 +21,8 @@ export function RegistrationRequests() {
 
     const locationById = new Map(locations.map((l) => [l.id, l]));
     const programById = new Map(programs.map((p) => [p.id, p]));
+    const seasonById = new Map(seasons.map((s) => [s.id, s]));
+    const currentSeasonName = seasons.find((s) => s.id === selectedSeasonId)?.name;
 
     const shareLink = `${window.location.origin}/apply`;
 
@@ -29,9 +31,18 @@ export function RegistrationRequests() {
         success('Registration link copied to clipboard');
     }
 
+    // requestSeasonId no longer needs to trace through an approved Registration - the applicant
+    // states which season they're applying for right on the form, so it's available immediately,
+    // even for a still-pending request.
+    function requestSeasonId(req: RegistrationRequest): string {
+        return req.seasonId;
+    }
+
     function openReview(req: RegistrationRequest) {
         setReviewing(req);
-        const locTerms = terms.filter((t) => t.locationId === req.locationId);
+        // The term dropdown is filtered by what the APPLICANT asked for, not whichever season the
+        // admin happens to be viewing right now - their stated intent is authoritative here.
+        const locTerms = terms.filter((t) => t.locationId === req.locationId && t.seasonId === req.seasonId);
         setTermId(locTerms[0]?.id ?? '');
         const eligibleCohorts = cohorts.filter((c) => {
             const rule = cohortRules.find((r) => r.id === c.cohortRuleId);
@@ -134,16 +145,31 @@ export function RegistrationRequests() {
 
     const termsForReview = useMemo(() => {
         if (!reviewing) return [];
-        return terms.filter((t) => t.locationId === reviewing.locationId);
+        return terms.filter((t) => t.locationId === reviewing.locationId && t.seasonId === reviewing.seasonId);
     }, [reviewing, terms]);
 
-    const sorted = [...requests].sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
+    // Every request now states which season it's for right from submission, so filtering applies
+    // uniformly to pending, approved, and rejected requests alike - no special-casing needed.
+    const visibleRequests = useMemo(() => {
+        return requests.filter((req) => {
+            if (selectedSeasonId === 'all') return true;
+            return requestSeasonId(req) === selectedSeasonId;
+        });
+    }, [requests, selectedSeasonId]);
+
+    const sorted = [...visibleRequests].sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
 
     return (
         <div className="space-y-6">
             <div>
                 <h1 className="text-2xl font-bold tracking-tight text-text">Registration Requests</h1>
                 <p className="text-text-muted mt-1">Requests submitted through your public registration link.</p>
+                <p className="text-xs text-text-muted mt-1">
+                    {selectedSeasonId === 'all'
+                        ? 'Showing requests for all seasons - applicants choose their season on the form itself.'
+                        : `Showing requests for ${currentSeasonName ?? 'the selected season'} only.`}
+                    {' '}Change this from the season selector in the top bar.
+                </p>
             </div>
 
             <div className="bg-surface rounded-lg border border-border shadow-sm p-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
@@ -182,6 +208,7 @@ export function RegistrationRequests() {
                                         <span>{req.guardianName} · {req.guardianPhone}</span>
                                         <span>{locationById.get(req.locationId)?.name}</span>
                                         <span>{programById.get(req.programId)?.name}</span>
+                                        <span>{seasonById.get(req.seasonId)?.name ?? 'Unknown season'}</span>
                                         {req.preferredCohortLabel && <span>Wants: {req.preferredCohortLabel}</span>}
                                         <span>{new Date(req.submittedAt).toLocaleString()}</span>
                                     </div>
@@ -221,29 +248,43 @@ export function RegistrationRequests() {
                             <div><span className="text-text-muted">Phone</span><p className="font-medium text-text">{reviewing.guardianPhone}</p></div>
                             <div><span className="text-text-muted">Location</span><p className="font-medium text-text">{locationById.get(reviewing.locationId)?.name}</p></div>
                             <div><span className="text-text-muted">Programme</span><p className="font-medium text-text">{programById.get(reviewing.programId)?.name}</p></div>
+                            <div><span className="text-text-muted">Season Requested</span><p className="font-medium text-text">{seasonById.get(reviewing.seasonId)?.name ?? 'Unknown'}</p></div>
                             {reviewing.message && <div className="col-span-2"><span className="text-text-muted">Message</span><p className="text-text">{reviewing.message}</p></div>}
                         </div>
 
                         <p className="text-xs text-text-muted flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Confirm the term and cohort before this becomes a real registration and invoice.</p>
 
-                        <FormField label="Term" required>
-                            {(id) => (
-                                <select id={id} value={termId} onChange={(e) => setTermId(e.target.value)} required>
-                                    {termsForReview.map((t) => <option key={t.id} value={t.id}>Term {t.termNo} ({t.startDate})</option>)}
-                                </select>
-                            )}
-                        </FormField>
-                        <FormField label="Cohort" required>
-                            {(id) => (
-                                <select id={id} value={cohortId} onChange={(e) => setCohortId(e.target.value)} required>
-                                    {eligibleCohortsForReview.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
-                                </select>
-                            )}
-                        </FormField>
+                        {termsForReview.length === 0 ? (
+                            <p className="text-sm text-danger bg-danger/5 border border-danger/20 rounded-md p-3">
+                                {seasonById.get(reviewing.seasonId)?.name ?? 'The requested season'} has no terms set up yet for {locationById.get(reviewing.locationId)?.name} -
+                                add one under Seasons &amp; Terms, or switch the season selector in the top bar before approving.
+                            </p>
+                        ) : (
+                            <>
+                                <FormField label="Term" required>
+                                    {(id) => (
+                                        <select id={id} value={termId} onChange={(e) => setTermId(e.target.value)} required>
+                                            {termsForReview.map((t) => <option key={t.id} value={t.id}>Term {t.termNo} ({t.startDate})</option>)}
+                                        </select>
+                                    )}
+                                </FormField>
+                                <FormField label="Cohort" required>
+                                    {(id) => (
+                                        <select id={id} value={cohortId} onChange={(e) => setCohortId(e.target.value)} required>
+                                            {eligibleCohortsForReview.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+                                        </select>
+                                    )}
+                                </FormField>
+                            </>
+                        )}
 
                         <div className="pt-4 flex justify-end gap-3 border-t border-border mt-6">
                             <button onClick={() => setReviewing(null)} className="px-4 py-2 text-sm font-medium text-text-muted hover:text-text transition-colors">Cancel</button>
-                            <button onClick={approve} className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
+                            <button
+                                onClick={approve}
+                                disabled={termsForReview.length === 0}
+                                className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
                                 Approve &amp; Create Registration
                             </button>
                         </div>

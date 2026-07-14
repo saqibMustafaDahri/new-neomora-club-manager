@@ -80,31 +80,26 @@
 
 
 
-
-import { useMemo, useState } from 'react';
-import { MapPin, Users, Banknote, ListOrdered, TrendingUp, CalendarClock, Percent, AlertTriangle, SaudiRiyal } from 'lucide-react';
+import { useMemo } from 'react';
+import { MapPin, Users, Banknote, ListOrdered, TrendingUp, Percent, AlertTriangle, SaudiRiyal } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
+import { selectTermsForSelectedSeason, filterRegistrationsBySelectedSeason } from '../../store/selectors';
 import { StatCard } from '../../components/ui/StatCard';
 import { DataTable, type Column } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
-import { Select } from '../../components/ui/Select';
 
 export function Dashboard() {
-  const { locations, registrations, invoices, payments, waitlistEntries, terms, seasons } = useDataStore();
+  const { locations, registrations, invoices, payments, waitlistEntries, selectedSeasonId, seasons } = useDataStore();
 
-  const [seasonId, setSeasonId] = useState<string>(seasons[0]?.id ?? '');
-  const selectedSeason = seasons.find((s) => s.id === seasonId) ?? seasons[0];
+  const selectedSeason = seasons.find((s) => s.id === selectedSeasonId);
 
-  // Every downstream number on this page is scoped to the selected season's terms.
-  const seasonTerms = useMemo(
-    () => terms.filter((t) => t.seasonId === selectedSeason?.id),
-    [terms, selectedSeason]
-  );
-  const seasonTermIds = useMemo(() => new Set(seasonTerms.map((t) => t.id)), [seasonTerms]);
+  // Every downstream number on this page is scoped to the season selected in the top bar -
+  // this page has no season control of its own anymore, it just reads the shared one.
+  const seasonTerms = useMemo(() => selectTermsForSelectedSeason(), [selectedSeasonId]);
 
   const seasonRegistrations = useMemo(
-    () => registrations.filter((r) => seasonTermIds.has(r.termId)),
-    [registrations, seasonTermIds]
+    () => filterRegistrationsBySelectedSeason(registrations),
+    [registrations, selectedSeasonId]
   );
   const activeRegistrations = seasonRegistrations.filter((r) => r.status === 'active');
   const uniqueActiveStudents = new Set(activeRegistrations.map((r) => r.studentId)).size;
@@ -154,35 +149,19 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-text">Dashboard</h1>
-          <p className="text-text-muted mt-1">Overview of academy performance.</p>
-        </div>
-
-        {/* Season selector - only one season exists today, but this scales as future seasons are added */}
-        <div className="flex items-center gap-2">
-          <CalendarClock className="w-4 h-4 text-text-muted" />
-          <label htmlFor="season-select" className="text-xs font-medium text-text-muted uppercase tracking-wider">Season</label>
-          <Select
-            id="season-select"
-            value={selectedSeason?.id ?? ''}
-            onChange={(e) => setSeasonId(e.target.value)}
-            className="text-sm px-3 py-2 bg-surface text-text"
-            containerClassName="min-w-[160px]"
-          >
-            {seasons.map((s) => (
-              <option key={s.id} value={s.id}>{s.name}</option>
-            ))}
-          </Select>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-text">Dashboard</h1>
+        <p className="text-text-muted mt-1">Overview of academy performance.</p>
       </div>
 
-      {selectedSeason && (
-        <p className="text-xs text-text-muted -mt-4">
-          Showing {selectedSeason.name} · {selectedSeason.startDate} to {selectedSeason.endDate}
-        </p>
-      )}
+      <p className="text-xs text-text-muted -mt-4">
+        {selectedSeasonId === 'all'
+          ? `Showing all seasons on record (${seasons.length} season${seasons.length !== 1 ? 's' : ''})`
+          : selectedSeason
+            ? `Showing ${selectedSeason.name} · ${selectedSeason.startDate} to ${selectedSeason.endDate}`
+            : 'No season selected'}
+        {' · '}Change this from the season selector in the top bar.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard icon={MapPin} label="Total Locations" value={locations.length} accent="primary" />

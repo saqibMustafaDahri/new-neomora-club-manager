@@ -144,11 +144,13 @@ export interface DataState {
   coachAssignments: Types.CoachAssignment[];
   enquiries: Types.Enquiry[];
   currentUser: Types.User | null;
+  selectedSeasonId: string; // 'all' or a real Season.id - the single source of truth every page reads from
 
   // Generic action helpers can be added here, or we can just define specific ones if needed.
   // We'll expose a generic way to update collections to save space, but provide specific getters/setters as requested.
   setCollection: <K extends keyof DataState>(key: K, data: DataState[K]) => void;
   setCurrentUser: (userId: string | null) => void;
+  setSelectedSeasonId: (seasonId: string) => void;
 }
 
 export const useDataStore = create<DataState>((set) => ({
@@ -176,9 +178,11 @@ export const useDataStore = create<DataState>((set) => ({
   coachAssignments: mock.mockCoachAssignments,
   enquiries: mock.mockEnquiries,
   currentUser: mock.mockUsers[0] || null,
+  selectedSeasonId: mock.mockSeasons[mock.mockSeasons.length - 1]?.id ?? 'all',
 
   setCollection: (key, data) => set({ [key]: data } as any),
   setCurrentUser: (userId) => set((state) => ({ currentUser: state.users.find(u => u.id === userId) || null })),
+  setSelectedSeasonId: (seasonId) => set({ selectedSeasonId: seasonId }),
 }));
 
 // Helper to create CRUD actions for a specific entity type

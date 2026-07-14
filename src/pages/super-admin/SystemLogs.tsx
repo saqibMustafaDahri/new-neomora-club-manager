@@ -16,9 +16,24 @@ interface LogRow {
 }
 
 export function SystemLogs() {
-  const { registrations, invoices, payments, students, terms, locations } = useDataStore();
+  const { registrations: allRegistrations, invoices, payments: allPayments, students, terms, locations, seasons, selectedSeasonId } = useDataStore();
   const [typeFilter, setTypeFilter] = useState<'all' | LogType>('all');
   const [query, setQuery] = useState('');
+
+  const registrations = useMemo(() => {
+    if (selectedSeasonId === 'all') return allRegistrations;
+    const seasonTermIds = new Set(terms.filter((t) => t.seasonId === selectedSeasonId).map((t) => t.id));
+    return allRegistrations.filter((r) => seasonTermIds.has(r.termId));
+  }, [allRegistrations, terms, selectedSeasonId]);
+
+  const payments = useMemo(() => {
+    if (selectedSeasonId === 'all') return allPayments;
+    const seasonRegIds = new Set(registrations.map((r) => r.id));
+    const seasonInvoiceIds = new Set(invoices.filter((i) => seasonRegIds.has(i.registrationId)).map((i) => i.id));
+    return allPayments.filter((p) => seasonInvoiceIds.has(p.invoiceId));
+  }, [allPayments, invoices, registrations, selectedSeasonId]);
+
+  const currentSeasonName = seasons.find((s) => s.id === selectedSeasonId)?.name;
 
   const logs = useMemo(() => {
     const studentById = new Map(students.map((s) => [s.id, s]));
@@ -78,6 +93,9 @@ export function SystemLogs() {
         <h1 className="text-2xl font-bold tracking-tight text-text">System Logs</h1>
         <p className="text-text-muted mt-1">
           Chronological record of registration and payment events, reconstructed from real timestamped data.
+        </p>
+        <p className="text-xs text-text-muted mt-1">
+          {selectedSeasonId === 'all' ? 'Showing all seasons combined' : `Showing ${currentSeasonName ?? 'the selected season'}`} - change this from the season selector in the top bar.
         </p>
         <p className="text-xs text-text-muted mt-1">
           Other event types (logins, setting changes, record edits) aren't shown here - this demo doesn't

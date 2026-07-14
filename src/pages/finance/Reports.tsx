@@ -547,9 +547,11 @@ function Panel({ title, subtitle, children }: { title: string; subtitle?: string
 export function Reports() {
   const [activeMetric, setActiveMetric] = useState("revenue");
 
-  const registrations = useDataStore((s) => s.registrations);
+  const allRegistrations = useDataStore((s) => s.registrations);
+  const selectedSeasonId = useDataStore((s) => s.selectedSeasonId);
+  const seasons = useDataStore((s) => s.seasons);
   const invoices = useDataStore((s) => s.invoices);
-  const payments = useDataStore((s) => s.payments);
+  const allPayments = useDataStore((s) => s.payments);
   const terms = useDataStore((s) => s.terms);
   const locations = useDataStore((s) => s.locations);
   const programs = useDataStore((s) => s.programs);
@@ -559,6 +561,21 @@ export function Reports() {
   const rateCards = useDataStore((s) => s.rateCards);
   const discountRules = useDataStore((s) => s.discountRules);
 
+  const registrations = useMemo(() => {
+    if (selectedSeasonId === "all") return allRegistrations;
+    const seasonTermIds = new Set(terms.filter((t) => t.seasonId === selectedSeasonId).map((t) => t.id));
+    return allRegistrations.filter((r) => seasonTermIds.has(r.termId));
+  }, [allRegistrations, terms, selectedSeasonId]);
+
+  const payments = useMemo(() => {
+    if (selectedSeasonId === "all") return allPayments;
+    const seasonRegIds = new Set(registrations.map((r) => r.id));
+    const seasonInvoiceIds = new Set(invoices.filter((i) => seasonRegIds.has(i.registrationId)).map((i) => i.id));
+    return allPayments.filter((p) => seasonInvoiceIds.has(p.invoiceId));
+  }, [allPayments, invoices, registrations, selectedSeasonId]);
+
+  const currentSeasonName = seasons.find((s) => s.id === selectedSeasonId)?.name;
+
   const data = useMemo(() => {
     const termById = new Map(terms.map((t) => [t.id, t]));
     const locationById = new Map(locations.map((l) => [l.id, l]));
@@ -567,10 +584,11 @@ export function Reports() {
     const cohortById = new Map(cohorts.map((c) => [c.id, c]));
     const studentById = new Map(students.map((s) => [s.id, s]));
 
-    const totalRevenue = invoices.reduce((sum, i) => sum + i.total, 0);
-    const totalVat = invoices.reduce((sum, i) => sum + i.vatAmount, 0);
-    const totalRegFees = invoices.reduce((sum, i) => sum + i.registrationFee, 0);
-    const avgInvoiceValue = invoices.length > 0 ? totalRevenue / invoices.length : 0;
+    const totalRevenue = registrations.reduce((sum, r) => sum + (invoiceByRegId.get(r.id)?.total ?? 0), 0);
+    const totalVat = registrations.reduce((sum, r) => sum + (invoiceByRegId.get(r.id)?.vatAmount ?? 0), 0);
+    const totalRegFees = registrations.reduce((sum, r) => sum + (invoiceByRegId.get(r.id)?.registrationFee ?? 0), 0);
+    const seasonInvoiceCount = registrations.filter((r) => invoiceByRegId.has(r.id)).length;
+    const avgInvoiceValue = seasonInvoiceCount > 0 ? totalRevenue / seasonInvoiceCount : 0;
 
     // Per-term aggregates - the real cyclical unit for this business (3 terms, not 12 months)
     const termNumbers = [1, 2, 3];
@@ -785,6 +803,9 @@ export function Reports() {
         <div>
           <h1 className="text-2xl font-bold text-text">Reports</h1>
           <p className="text-sm text-text-muted mt-1">Financial analytics and performance insights</p>
+          <p className="text-xs text-text-muted mt-1">
+            {selectedSeasonId === "all" ? "Showing all seasons combined" : `Showing ${currentSeasonName ?? "the selected season"}`} - change this from the season selector in the top bar.
+          </p>
         </div>
       </div>
 
@@ -907,7 +928,7 @@ export function Reports() {
             </div>
           </Panel>
 
-          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(0)}% of payments have no bank reference on file`}>
+          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(1)}% of payments have no bank reference on file`}>
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>
