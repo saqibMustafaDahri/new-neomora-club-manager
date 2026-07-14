@@ -164,7 +164,7 @@ export function Users() {
           {selectedRole === 'parent' && (
             <FormField label="Family Link" required>
               {(id) => (
-                <Select id={id} name="familyId" required defaultValue="" containerClassName="w-full">
+                <Select id={id} name="familyId" required defaultValue="" >
                   <option value="" disabled>Select a Family...</option>
                   {families.map(fam => (
                     <option key={fam.id} value={fam.id}>{fam.guardianName}</option>
