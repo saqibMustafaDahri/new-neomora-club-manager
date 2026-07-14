@@ -762,7 +762,7 @@ export function Invoices() {
       </div>
 
       {selected && (
-        <Modal isOpen onClose={() => setSelectedId(null)} title={selected.studentName} width="lg">
+        <Modal isOpen onClose={() => setSelectedId(null)} title={selected.studentName} width="xl">
           <div className="space-y-4 py-1">
             <div className="flex flex-wrap items-center gap-3 text-sm text-text-muted">
               <span>{selected.guardianName} · {selected.guardianPhone}</span>
