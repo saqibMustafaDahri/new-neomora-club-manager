@@ -125,7 +125,7 @@
 //           <p className="text-sm text-text-muted mt-1">Analytics and performance insights</p>
 //         </div>
 //       </div>
-      
+
 //       <div className="space-y-6">
 
 //         {/* Metric Cards (5 columns on large screens) */}
@@ -198,7 +198,7 @@
 //                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
 //                   <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
 //                   <YAxis stroke="#6b7280" fontSize={12} />
-//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(1)}x`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
+//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(0)}x`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
 //                   <Legend />
 //                   <Bar dataKey="roas" fill="#1B4332" name="Waitlist" radius={[4, 4, 0, 0]} />
 //                 </BarChart>
@@ -215,7 +215,7 @@
 //                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
 //                   <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
 //                   <YAxis stroke="#6b7280" fontSize={12} />
-//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(1)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
+//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(0)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
 //                   <Legend />
 //                   <Line type="monotone" dataKey="rate" stroke="#1B4332" strokeWidth={3} name="Monthly Growth (%)" />
 //                 </LineChart>
@@ -479,14 +479,14 @@
 // }
 
 import { useMemo, useState } from "react";
-import { Download, DollarSign, Receipt, TrendingUp, Percent, Users, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Download, DollarSign, Receipt, TrendingUp, Percent, Users, ArrowUpRight, ArrowDownRight, SaudiRiyal } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid, Cell,
   LineChart, Line, PieChart, Pie, AreaChart, Area
 } from "recharts";
 import { useDataStore } from "../../store/dataStore";
 
-const SAR = (n: number) => `SAR ${n.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
+const SAR = (n: number) => <span className="inline-flex items-center"><SaudiRiyal className="w-[1em] h-[1em] mr-1 opacity-80" />{n.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>;
 
 const asNumber = (value: unknown) => {
   if (typeof value === "number") return value;
@@ -498,7 +498,7 @@ const formatSAR = (value: unknown) => SAR(asNumber(value));
 
 const PIE_COLORS = ["#0d5026", "#408a5b", "#6b8f4e", "#a0a83f", "#c7b52e"];
 
-function MetricCard({ title, value, change, trend, icon: Icon, isActive, onClick }: { title: string, value: string, change?: string, trend?: "up" | "down" | "neutral", icon: any, isActive?: boolean, onClick?: () => void }) {
+function MetricCard({ title, value, change, trend, icon: Icon, isActive, onClick }: { title: string, value: React.ReactNode, change?: React.ReactNode, trend?: "up" | "down" | "neutral", icon: any, isActive?: boolean, onClick?: () => void }) {
   return (
     <div
       onClick={onClick}
@@ -798,7 +798,7 @@ export function Reports() {
           <MetricCard title="VAT Collected" value={formatSAR(data.totalVat)} icon={Percent} isActive={activeMetric === "vat"} onClick={() => setActiveMetric("vat")} />
           <MetricCard
             title="Term 1 → Term 3 Revenue Change"
-            value={`${data.termOverTermChangePct >= 0 ? "+" : ""}${data.termOverTermChangePct.toFixed(1)}%`}
+            value={`${data.termOverTermChangePct >= 0 ? "+" : ""}${data.termOverTermChangePct.toFixed(0)}%`}
             change="across the 2025-26 season"
             trend={data.termOverTermChangePct > 0 ? "up" : data.termOverTermChangePct < 0 ? "down" : "neutral"}
             icon={Receipt}
@@ -907,7 +907,7 @@ export function Reports() {
             </div>
           </Panel>
 
-          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(1)}% of payments have no bank reference on file`}>
+          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(0)}% of payments have no bank reference on file`}>
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>
@@ -957,8 +957,17 @@ export function Reports() {
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={data.revenueByLocationData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} label>
-                    {data.revenueByLocationData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                  <Pie
+                    data={data.feeBreakdownData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    label={({ value }) => Math.round(value).toLocaleString()}
+                  >
+                    {data.feeBreakdownData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                   </Pie>
                   <Tooltip formatter={(v) => formatSAR(v)} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
                   <Legend />
@@ -989,8 +998,17 @@ export function Reports() {
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={data.feeBreakdownData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} label>
-                    {data.feeBreakdownData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                  <Pie
+                    data={data.revenueByLocationData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    label={({ value }) => Math.round(value).toLocaleString()}
+                  >
+                    {data.revenueByLocationData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                   </Pie>
                   <Tooltip formatter={(v) => formatSAR(v)} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
                   <Legend />
@@ -1072,7 +1090,7 @@ export function Reports() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis dataKey="type" stroke="#6b7280" fontSize={12} />
                 <YAxis stroke="#6b7280" fontSize={12} tickFormatter={(v) => `${v}%`} />
-                <Tooltip formatter={(v) => `${asNumber(v).toFixed(1)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
+                <Tooltip formatter={(v) => `${asNumber(v).toFixed(0)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
                 <Bar dataKey="Discount %" radius={[4, 4, 0, 0]}>
                   {data.discountRuleData.map((d, i) => <Cell key={i} fill={d.status === "Active" ? "#1B4332" : "#9ca3af"} />)}
                 </Bar>
@@ -1100,7 +1118,16 @@ export function Reports() {
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={data.revenueConcentrationData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} label>
+                  <Pie
+                    data={data.revenueConcentrationData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    label={({ value }) => Math.round(value).toLocaleString()}
+                  >
                     <Cell fill="#1B4332" />
                     <Cell fill="#9ca3af" />
                   </Pie>

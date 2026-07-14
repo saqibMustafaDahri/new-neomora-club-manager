@@ -10,7 +10,7 @@ interface Trend {
 interface StatCardProps {
   icon: LucideIcon;
   label: string;
-  value: string | number;
+  value: React.ReactNode;
   trend?: Trend;
   /** Highlight the icon with a tinted background. Defaults to 'primary'. */
   accent?: 'primary' | 'success' | 'warning' | 'danger';

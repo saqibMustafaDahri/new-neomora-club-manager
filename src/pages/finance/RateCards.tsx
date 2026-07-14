@@ -6,19 +6,20 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { useToast } from '../../components/ui/Toast';
 import { FormField } from '../../components/ui/FormField';
+import { Select } from '../../components/ui/Select';
 
 export function RateCards() {
   const { rateCards, programs } = useDataStore();
   const { success, error } = useToast();
-  
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const tableData = useMemo(() => {
     const now = new Date().toISOString().split('T')[0];
-    
+
     return rateCards.map(rc => {
       const program = programs.find(p => p.id === rc.programId);
-      
+
       let status: 'Active' | 'Scheduled' | 'Expired' = 'Active';
       if (rc.effectiveFrom > now) {
         status = 'Scheduled';
@@ -47,13 +48,13 @@ export function RateCards() {
 
     // Validation: Check for overlap
     const existingCards = rateCards.filter(rc => rc.programId === programId);
-    
+
     for (const card of existingCards) {
       const existingFrom = card.effectiveFrom;
       const existingTo = card.effectiveTo || '9999-12-31';
       const newFrom = effectiveFrom;
       const newTo = effectiveTo || '9999-12-31';
-      
+
       // Check overlap: (StartA <= EndB) and (EndA >= StartB)
       if (existingFrom <= newTo && existingTo >= newFrom) {
         error('This date range overlaps with an existing rate card for this program.');
@@ -78,17 +79,17 @@ export function RateCards() {
 
   const columns: Column<typeof tableData[0]>[] = [
     { key: 'programName', label: 'Program' },
-    { key: 'weeklyRate', label: 'Weekly Rate', render: (val) => `${val} SAR` },
-    { key: 'kitFee', label: 'Kit Fee', render: (val) => `${val} SAR` },
-    { key: 'registrationFee', label: 'Reg Fee', render: (val) => `${val} SAR` },
+    { key: 'weeklyRate', label: 'Weekly Rate', render: (val) => `${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })} SAR` },
+    { key: 'kitFee', label: 'Kit Fee', render: (val) => `${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })} SAR` },
+    { key: 'registrationFee', label: 'Reg Fee', render: (val) => `${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })} SAR` },
     { key: 'minBillableWeeks', label: 'Min Weeks' },
-    { 
-      key: 'effectiveFrom', 
-      label: 'Date Range', 
-      render: (_, row) => `${row.effectiveFrom} to ${row.effectiveTo || 'Ongoing'}` 
+    {
+      key: 'effectiveFrom',
+      label: 'Date Range',
+      render: (_, row) => `${row.effectiveFrom} to ${row.effectiveTo || 'Ongoing'}`
     },
-    { 
-      key: 'status', 
+    {
+      key: 'status',
       label: 'Status',
       render: (val) => (
         <Badge variant={val === 'Active' ? 'success' : val === 'Scheduled' ? 'info' : 'neutral'}>
@@ -129,15 +130,15 @@ export function RateCards() {
         title="Add Rate Card"
       >
         <form id="rate-card-form" onSubmit={handleSubmit} className="space-y-4 py-2">
-          
+
           <FormField label="Program" required>
             {(id) => (
-              <select id={id} name="programId" required>
-                <option value="" disabled selected>Select Program...</option>
+              <Select id={id} name="programId" required defaultValue="" containerClassName="w-full">
+                <option value="" disabled>Select Program...</option>
                 {programs.map(p => (
                   <option key={p.id} value={p.id}>{p.name} ({p.code})</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 
@@ -167,7 +168,7 @@ export function RateCards() {
               {(id) => <input id={id} name="effectiveTo" type="date" />}
             </FormField>
           </div>
-          
+
           <div className="pt-4 flex justify-end gap-3 border-t border-border mt-6">
             <button
               type="button"

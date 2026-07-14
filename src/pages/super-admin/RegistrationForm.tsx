@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from '../../components/ui/FormField';
+import { Select } from '../../components/ui/Select';
 
 export function RegistrationForm() {
     const navigate = useNavigate();
@@ -101,11 +102,11 @@ export function RegistrationForm() {
                                 </FormField>
                                 <FormField label="Primary location" required>
                                     {(id) => (
-                                        <select id={id} defaultValue="" className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary text-text-muted">
+                                        <Select id={id} defaultValue="" containerClassName="w-full" className="px-3 py-2 text-sm text-text-muted bg-background">
                                             <option value="" disabled>Select location</option>
                                             <option value="Jeddah">Jeddah</option>
                                             <option value="Riyadh">Riyadh</option>
-                                        </select>
+                                        </Select>
                                     )}
                                 </FormField>
                             </div>
@@ -131,11 +132,11 @@ export function RegistrationForm() {
                             </FormField>
                             <FormField label="Gender" required>
                                 {(id) => (
-                                    <select id={id} defaultValue="" className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary text-text-muted">
+                                    <Select id={id} defaultValue="" containerClassName="w-full" className="px-3 py-2 text-sm text-text-muted bg-background">
                                         <option value="" disabled>Select</option>
                                         <option value="Female">Female</option>
                                         <option value="Male">Male</option>
-                                    </select>
+                                    </Select>
                                 )}
                             </FormField>
                         </div>
@@ -151,30 +152,30 @@ export function RegistrationForm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <FormField label="Location" required>
                                 {(id) => (
-                                    <select id={id} value={location} onChange={e => setLocation(e.target.value)} className={`w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary ${location === '' ? 'text-text-muted' : ''}`}>
+                                    <Select id={id} value={location} onChange={e => setLocation(e.target.value)} containerClassName="w-full" className={`px-3 py-2 text-sm bg-background ${location === '' ? 'text-text-muted' : ''}`}>
                                         <option value="" disabled>Select location</option>
                                         <option value="Jeddah">Jeddah</option>
                                         <option value="Riyadh">Riyadh</option>
-                                    </select>
+                                    </Select>
                                 )}
                             </FormField>
                             <FormField label="Program" required>
                                 {(id) => (
-                                    <select id={id} value={program} onChange={e => setProgram(e.target.value)} className={`w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary ${program === '' ? 'text-text-muted' : ''}`}>
+                                    <Select id={id} value={program} onChange={e => setProgram(e.target.value)} containerClassName="w-full" className={`px-3 py-2 text-sm bg-background ${program === '' ? 'text-text-muted' : ''}`}>
                                         <option value="" disabled>Select program</option>
                                         <option value="Football Academy">Football Academy</option>
                                         <option value="Basketball Academy">Basketball Academy</option>
                                         <option value="Swimming Academy">Swimming Academy</option>
-                                    </select>
+                                    </Select>
                                 )}
                             </FormField>
                             <FormField label="Term" required>
                                 {(id) => (
-                                    <select id={id} value={term} onChange={e => setTerm(e.target.value)} className={`w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary ${term === '' ? 'text-text-muted' : ''}`}>
+                                    <Select id={id} value={term} onChange={e => setTerm(e.target.value)} containerClassName="w-full" className={`px-3 py-2 text-sm bg-background ${term === '' ? 'text-text-muted' : ''}`}>
                                         <option value="" disabled>Select term</option>
                                         <option value="Jeddah Summer 2026">Jeddah Summer 2026</option>
                                         <option value="Riyadh Summer 2026">Riyadh Summer 2026</option>
-                                    </select>
+                                    </Select>
                                 )}
                             </FormField>
                             <FormField label="Join date" required>
@@ -246,12 +247,12 @@ export function RegistrationForm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormField label="Payment method">
                                 {(id) => (
-                                    <select id={id} defaultValue="" className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-primary" disabled={paymentOption === 'none'}>
+                                    <Select id={id} defaultValue="" disabled={paymentOption === 'none'} containerClassName="w-full" className="px-3 py-2 text-sm bg-background">
                                         <option value="" disabled>Select</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Card">Card</option>
                                         <option value="Bank Transfer">Bank Transfer</option>
-                                    </select>
+                                    </Select>
                                 )}
                             </FormField>
                             <FormField label="Reference">

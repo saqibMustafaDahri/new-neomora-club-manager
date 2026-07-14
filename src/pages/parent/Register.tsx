@@ -1,10 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
+import { SaudiRiyal } from 'lucide-react';
 import { useDataStore, RegistrationActions, InvoiceActions } from '../../store/dataStore';
 import { selectFamilyStudents, selectFamilyRegistrations } from '../../store/selectors';
 import { calculateFee } from '../../lib/pricingEngine';
 import { FormField } from '../../components/ui/FormField';
 import { Badge } from '../../components/ui/Badge';
 import { useToast } from '../../components/ui/Toast';
+import { Select } from '../../components/ui/Select';
 import type { Registration } from '../../types';
 
 export function Register() {
@@ -60,7 +62,7 @@ export function Register() {
     } catch {
       return null;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftReg, rateCards, discountRules, vatConfigs, registrations, students]);
 
   // Per-commitment-term discount preview for radios
@@ -137,11 +139,11 @@ export function Register() {
 
           <FormField label="Student" required>
             {(id) => (
-              <select id={id} value={studentId} onChange={e => setStudentId(e.target.value)} required>
+              <Select id={id} value={studentId} onChange={e => setStudentId(e.target.value)} required containerClassName="w-full">
                 {familyStudents.map(s => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 
@@ -155,22 +157,22 @@ export function Register() {
 
           <FormField label="Programme" required>
             {(id) => (
-              <select id={id} value={programId} onChange={e => setProgramId(e.target.value)} required>
+              <Select id={id} value={programId} onChange={e => setProgramId(e.target.value)} required containerClassName="w-full">
                 {programs.map(p => (
                   <option key={p.id} value={p.id}>{p.name} ({p.code})</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 
           <FormField label="Term" required>
             {(id) => (
-              <select id={id} value={termId} onChange={e => setTermId(e.target.value)} required>
+              <Select id={id} value={termId} onChange={e => setTermId(e.target.value)} required containerClassName="w-full">
                 <option value="">Select a term...</option>
                 {availableTerms.map(t => (
                   <option key={t.id} value={t.id}>Term {t.termNo} · {t.startDate} to {t.endDate} ({t.totalWeeks} wks)</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 
@@ -187,9 +189,8 @@ export function Register() {
               {commitmentOptions.map(opt => (
                 <label
                   key={opt.terms}
-                  className={`flex items-center justify-between gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    commitmentTerms === opt.terms ? 'border-primary bg-primary/5' : 'border-border hover:border-border/80'
-                  }`}
+                  className={`flex items-center justify-between gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${commitmentTerms === opt.terms ? 'border-primary bg-primary/5' : 'border-border hover:border-border/80'
+                    }`}
                 >
                   <div className="flex items-center gap-2">
                     <input
@@ -225,7 +226,7 @@ export function Register() {
                 <div className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${kitOptIn ? 'transform translate-x-4' : ''}`} />
               </div>
               <span className="text-sm text-text">
-                Include Kit (+{selectedRateCard.kitFee} SAR)
+                Include Kit (+{selectedRateCard.kitFee} <SaudiRiyal className="w-3.5 h-3.5 inline ml-1" />)
               </span>
             </label>
           )}
@@ -255,21 +256,21 @@ export function Register() {
                 </div>
                 <div className="px-5 py-3 flex justify-between">
                   <span className="text-text-muted">Base tuition + fees</span>
-                  <span className="font-medium text-text">{feePreview.baseAmount.toFixed(2)} SAR</span>
+                  <span className="font-medium text-text">{feePreview.baseAmount.toFixed(0)} <SaudiRiyal className="w-3.5 h-3.5 inline ml-1" /></span>
                 </div>
                 {feePreview.discountPct > 0 && (
                   <div className="px-5 py-3 flex justify-between text-success">
                     <span>Discount ({feePreview.discountPct}%)</span>
-                    <span>-{feePreview.discountAmount.toFixed(2)} SAR</span>
+                    <span>-{feePreview.discountAmount.toFixed(0)} <SaudiRiyal className="w-3.5 h-3.5 inline ml-1" /></span>
                   </div>
                 )}
                 <div className="px-5 py-3 flex justify-between text-text-muted">
                   <span>VAT</span>
-                  <span>{feePreview.vatAmount.toFixed(2)} SAR</span>
+                  <span>{feePreview.vatAmount.toFixed(0)} <SaudiRiyal className="w-3.5 h-3.5 inline ml-1" /></span>
                 </div>
                 <div className="px-5 py-4 flex justify-between bg-surface-muted/20 font-bold text-base">
                   <span className="text-text">Total</span>
-                  <span className="text-primary">{feePreview.total.toFixed(2)} SAR</span>
+                  <span className="text-primary">{feePreview.total.toFixed(0)} <SaudiRiyal className="w-3.5 h-3.5 inline ml-1" /></span>
                 </div>
                 {feePreview.discountPct > 0 && (
                   <div className="px-5 py-2 bg-success/5 text-xs text-success text-center">

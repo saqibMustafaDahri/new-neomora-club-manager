@@ -156,6 +156,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronsUpDown, Search } from 'lucide-react';
 import { EmptyState } from './EmptyState';
+import { Select } from './Select';
 
 export interface Column<T = Record<string, unknown>> {
   key: string;
@@ -297,12 +298,12 @@ export function DataTable<T extends object>({
         </div>
 
         {filters?.map((f) => (
-          <select
+          <Select
             key={f.key}
             value={filterValues[f.key] ?? ''}
             onChange={(e) => handleFilterChange(f.key, e.target.value)}
-            className="py-2 px-3 bg-background border border-border rounded-md text-sm text-text
-                       transition-all"
+            className="py-2 px-3 pr-10 bg-background text-sm text-text"
+            containerClassName="min-w-[160px]"
           >
             <option value="">All {f.label}</option>
             {f.options.map((opt) => (
@@ -310,7 +311,7 @@ export function DataTable<T extends object>({
                 {opt.label}
               </option>
             ))}
-          </select>
+          </Select>
         ))}
       </div>
 

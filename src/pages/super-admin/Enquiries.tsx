@@ -347,6 +347,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
+import { Select } from '../../components/ui/Select';
 import type { Enquiry } from '../../types';
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -645,15 +646,15 @@ function PipelineTab() {
             className="w-full pl-9 pr-4 py-2 bg-surface border border-border rounded-md text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </div>
-        <select value={channelFilter} onChange={(e) => setChannelFilter(e.target.value as any)} className="text-sm bg-surface border border-border rounded-md px-3 py-2 text-text">
+        <Select value={channelFilter} onChange={(e) => setChannelFilter(e.target.value as any)} className="text-sm px-3 py-2 bg-surface text-text" containerClassName="min-w-[160px]">
           <option value="all">All channels</option>
           <option value="whatsapp">WhatsApp</option>
           <option value="email">Email</option>
-        </select>
-        <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} className="text-sm bg-surface border border-border rounded-md px-3 py-2 text-text">
+        </Select>
+        <Select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} className="text-sm px-3 py-2 bg-surface text-text" containerClassName="min-w-[160px]">
           <option value="all">All locations</option>
           {locations.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
-        </select>
+        </Select>
         <div className="flex gap-1 bg-surface-muted rounded-md p-1 ml-auto">
           <button onClick={() => setView('board')} className={`p-1.5 rounded ${view === 'board' ? 'bg-surface shadow-sm text-primary' : 'text-text-muted'}`} aria-label="Board view">
             <LayoutGrid className="w-4 h-4" />
@@ -771,19 +772,19 @@ function NewTemplateModal({ onClose, onCreate }: { onClose: () => void; onCreate
         <div className="grid grid-cols-2 gap-4">
           <FormField label="Category" required>
             {(id) => (
-              <select id={id} value={category} onChange={(e) => setCategory(e.target.value as MessageTemplate['category'])} required>
+              <Select id={id} value={category} onChange={(e) => setCategory(e.target.value as MessageTemplate['category'])} required containerClassName="w-full">
                 <option value="MARKETING">Marketing</option>
                 <option value="UTILITY">Utility</option>
                 <option value="AUTHENTICATION">Authentication</option>
-              </select>
+              </Select>
             )}
           </FormField>
           <FormField label="Language" required>
             {(id) => (
-              <select id={id} value={language} onChange={(e) => setLanguage(e.target.value)} required>
+              <Select id={id} value={language} onChange={(e) => setLanguage(e.target.value)} required containerClassName="w-full">
                 <option value="en">English</option>
                 <option value="ar">Arabic</option>
-              </select>
+              </Select>
             )}
           </FormField>
         </div>
@@ -825,10 +826,10 @@ function NewRuleModal({ templates, onClose, onCreate }: { templates: MessageTemp
       <form onSubmit={handleSubmit} className="space-y-4 py-2">
         <FormField label="Trigger" required>
           {(id) => (
-            <select id={id} value={triggerChoice} onChange={(e) => setTriggerChoice(e.target.value)} required>
+            <Select id={id} value={triggerChoice} onChange={(e) => setTriggerChoice(e.target.value)} required containerClassName="w-full">
               {TRIGGER_PRESETS.map((t) => <option key={t} value={t}>{t}</option>)}
               <option value="custom">Custom...</option>
-            </select>
+            </Select>
           )}
         </FormField>
         {triggerChoice === 'custom' && (
@@ -841,18 +842,18 @@ function NewRuleModal({ templates, onClose, onCreate }: { templates: MessageTemp
             approvedTemplates.length === 0 ? (
               <p className="text-xs text-danger">No approved templates yet - a rule can only send an approved template, same as the real WhatsApp API.</p>
             ) : (
-              <select id={id} value={templateId} onChange={(e) => setTemplateId(e.target.value)} required>
+              <Select id={id} value={templateId} onChange={(e) => setTemplateId(e.target.value)} required containerClassName="w-full">
                 {approvedTemplates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-              </select>
+              </Select>
             )
           )}
         </FormField>
         <FormField label="Channel" required>
           {(id) => (
-            <select id={id} value={channel} onChange={(e) => setChannel(e.target.value as 'whatsapp' | 'email')} required>
+            <Select id={id} value={channel} onChange={(e) => setChannel(e.target.value as 'whatsapp' | 'email')} required containerClassName="w-full">
               <option value="whatsapp">WhatsApp</option>
               <option value="email">Email</option>
-            </select>
+            </Select>
           )}
         </FormField>
         <div className="pt-4 flex justify-end gap-3 border-t border-border mt-6">

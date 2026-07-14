@@ -6,6 +6,7 @@ import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
 import { Badge } from '../../components/ui/Badge';
+import { Select } from '../../components/ui/Select';
 import type { User, Role } from '../../types';
 
 export function Users() {
@@ -128,19 +129,20 @@ export function Users() {
 
           <FormField label="Role" required>
             {(id) => (
-              <select
+              <Select
                 id={id}
                 name="role"
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value as Role)}
                 required
+                containerClassName="w-full"
               >
                 <option value="parent">Parent</option>
                 <option value="coach">Coach</option>
                 <option value="locationManager">Location Manager</option>
                 <option value="financeOfficer">Finance Officer</option>
                 <option value="superAdmin">Super Admin</option>
-              </select>
+              </Select>
             )}
           </FormField>
 
@@ -162,12 +164,12 @@ export function Users() {
           {selectedRole === 'parent' && (
             <FormField label="Family Link" required>
               {(id) => (
-                <select id={id} name="familyId" required>
-                  <option value="" disabled selected>Select a Family...</option>
+                <Select id={id} name="familyId" required defaultValue="" containerClassName="w-full">
+                  <option value="" disabled>Select a Family...</option>
                   {families.map(fam => (
                     <option key={fam.id} value={fam.id}>{fam.guardianName}</option>
                   ))}
-                </select>
+                </Select>
               )}
             </FormField>
           )}

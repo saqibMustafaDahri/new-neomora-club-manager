@@ -8,13 +8,13 @@ import type {
 // Real data migrated from: ISC_KSA_Pricing_2025-26.xlsx, JED_RIY_Registrations_2025-26.xls,
 // JEDDAH_Register_2025-26_with_schedule_and_contact_details.xlsx, T3_RIYADH_Register_2025-26.xlsx
 //
-// CORRECTED: 71 registrations previously had a Payment record wrongly set to the full invoice
-// amount. These 71 have NEITHER a Date Paid NOR a Bank Ref in the source ledger - no evidence
-// any payment occurred - so they now correctly have NO Payment record at all (Unpaid). Combined
-// with the 6 already-correct Partial cases, 77 registrations (44 unique students) now show a real
-// outstanding balance, matching an independent row-by-row audit of the source spreadsheets.
-// mockPayments now has 500 records (571 registrations minus these 71 unpaid ones).
-
+// CORRECTED: 'Ahmed Baeshen' (U8) had been incorrectly merged into 'Ahmed Baeshan' (U12/2014JS)
+// as a name-spelling variant early in this migration. A ~4-year age-band gap (U8 vs U12) makes
+// clear these are two different real children, not a typo - un-merged back into separate
+// students/families. mockStudents: 384 -> 385, mockFamilies: 360 -> 361.
+//
+// Also corrected: 'Abdulkarim' duplicate (waitlisted on both U10 and U12) merged into one student;
+// 71 registrations with no Date Paid/Bank Ref have no Payment record (Unpaid), not fully paid.
 // Read MIGRATION_MAPPING.md for the full field-by-field mapping and known gaps.
 
 export const mockOrganizations: Organization[] = [
@@ -3038,13 +3038,6 @@ export const mockFamilies: Family[] = [
     "email": ""
   },
   {
-    "id": "family-wl-0109",
-    "guardianName": "",
-    "phonePrimary": "055 826 0852",
-    "phoneSecondary": null,
-    "email": ""
-  },
-  {
     "id": "family-wl-0110",
     "guardianName": "",
     "phonePrimary": "053 810 3757",
@@ -3076,6 +3069,13 @@ export const mockFamilies: Family[] = [
     "id": "family-wl-0114",
     "guardianName": "",
     "phonePrimary": "055 444 8899",
+    "phoneSecondary": null,
+    "email": ""
+  },
+  {
+    "id": "family-unmerge-0001",
+    "guardianName": "",
+    "phonePrimary": "",
     "phoneSecondary": null,
     "email": ""
   }
@@ -5736,13 +5736,6 @@ export const mockStudents: Student[] = [
     "locationId": "loc_riyadh"
   },
   {
-    "id": "student-wl-0109",
-    "familyId": "family-wl-0109",
-    "name": "Abdulkarim",
-    "dob": "2014-01-01",
-    "locationId": "loc_riyadh"
-  },
-  {
     "id": "student-wl-0110",
     "familyId": "family-wl-0110",
     "name": "Umar",
@@ -5776,6 +5769,13 @@ export const mockStudents: Student[] = [
     "name": "Sulaimani AlSulaim",
     "dob": "2019-01-01",
     "locationId": "loc_riyadh"
+  },
+  {
+    "id": "student-unmerge-0001",
+    "familyId": "family-unmerge-0001",
+    "name": "Ahmed Baeshen",
+    "dob": "",
+    "locationId": "loc_jeddah"
   }
 ];
 
@@ -5826,7 +5826,7 @@ export const mockRegistrations: Registration[] = [
   },
   {
     "id": "registration-0005",
-    "studentId": "student-0032",
+    "studentId": "student-unmerge-0001",
     "programId": "prog-as",
     "termId": "term-t1-jeddah",
     "cohortId": "cohort-u8",
@@ -7443,7 +7443,7 @@ export const mockRegistrations: Registration[] = [
   },
   {
     "id": "registration-0152",
-    "studentId": "student-0032",
+    "studentId": "student-unmerge-0001",
     "programId": "prog-as",
     "termId": "term-t2-jeddah",
     "cohortId": "cohort-u8",
@@ -8994,7 +8994,7 @@ export const mockRegistrations: Registration[] = [
   },
   {
     "id": "registration-0293",
-    "studentId": "student-0032",
+    "studentId": "student-unmerge-0001",
     "programId": "prog-as",
     "termId": "term-t3-jeddah",
     "cohortId": "cohort-u8",
@@ -25437,7 +25437,7 @@ export const mockWaitlistEntries: WaitlistEntry[] = [
   },
   {
     "id": "waitlist-0109",
-    "studentId": "student-wl-0109",
+    "studentId": "student-wl-0091",
     "cohortId": "cohort-u12",
     "requestedDate": "",
     "position": 13,

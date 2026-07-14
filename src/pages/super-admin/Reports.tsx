@@ -198,7 +198,7 @@
 //                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
 //                   <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
 //                   <YAxis stroke="#6b7280" fontSize={12} />
-//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(1)}x`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
+//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(0)}x`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
 //                   <Legend />
 //                   <Bar dataKey="roas" fill="#1B4332" name="Waitlist" radius={[4, 4, 0, 0]} />
 //                 </BarChart>
@@ -215,7 +215,7 @@
 //                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
 //                   <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
 //                   <YAxis stroke="#6b7280" fontSize={12} />
-//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(1)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
+//                   <Tooltip formatter={(v) => `${asNumber(v).toFixed(0)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
 //                   <Legend />
 //                   <Line type="monotone" dataKey="rate" stroke="#1B4332" strokeWidth={3} name="Monthly Growth (%)" />
 //                 </LineChart>
@@ -481,14 +481,14 @@
 
 
 import { useMemo, useState } from "react";
-import { Download, Users, DollarSign, Activity, TrendingUp, BarChart3, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Download, Users, DollarSign, Activity, TrendingUp, BarChart3, ArrowUpRight, ArrowDownRight, SaudiRiyal } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid, Cell,
   LineChart, Line, PieChart, Pie, AreaChart, Area
 } from "recharts";
 import { useDataStore } from "../../store/dataStore";
 
-const SAR = (n: number) => `SAR ${n.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
+const SAR = (n: number) => <span className="inline-flex items-center"><SaudiRiyal className="w-[1em] h-[1em] mr-1 opacity-80" />{n.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>;
 
 const asNumber = (value: unknown) => {
   if (typeof value === "number") return value;
@@ -500,7 +500,7 @@ const formatSAR = (value: unknown) => SAR(asNumber(value));
 
 const PIE_COLORS = ["#0d5026", "#408a5b", "#6b8f4e", "#a0a83f", "#c7b52e"];
 
-function MetricCard({ title, value, change, trend, icon: Icon, isActive, onClick }: { title: string, value: string, change?: string, trend?: "up" | "down" | "neutral", icon: any, isActive?: boolean, onClick?: () => void }) {
+function MetricCard({ title, value, change, trend, icon: Icon, isActive, onClick }: { title: string, value: React.ReactNode, change?: React.ReactNode, trend?: "up" | "down" | "neutral", icon: any, isActive?: boolean, onClick?: () => void }) {
   return (
     <div
       onClick={onClick}
@@ -786,7 +786,7 @@ export function Reports() {
           <MetricCard title="Total Waitlist" value={String(data.waitlistByCohortData.reduce((s, w) => s + w.count, 0))} icon={TrendingUp} isActive={activeMetric === "growth"} onClick={() => setActiveMetric("growth")} />
           <MetricCard
             title="Term 1 → Term 3 Revenue Change"
-            value={`${data.termOverTermChangePct >= 0 ? "+" : ""}${data.termOverTermChangePct.toFixed(1)}%`}
+            value={`${data.termOverTermChangePct >= 0 ? "+" : ""}${data.termOverTermChangePct.toFixed(0)}%`}
             change="across the 2025-26 season"
             trend={data.termOverTermChangePct > 0 ? "up" : data.termOverTermChangePct < 0 ? "down" : "neutral"}
             icon={BarChart3}
@@ -979,9 +979,9 @@ export function Reports() {
               <ResponsiveContainer>
                 <BarChart data={data.utilizationData} layout="vertical" margin={{ left: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis type="number" stroke="#6b7280" fontSize={12} tickFormatter={(v) => `${asNumber(v).toFixed(1)}%`} domain={[0, 100]} />
+                  <XAxis type="number" stroke="#6b7280" fontSize={12} tickFormatter={(v) => `${asNumber(v).toFixed(0)}%`} domain={[0, 100]} />
                   <YAxis type="category" dataKey="location" stroke="#6b7280" fontSize={12} width={130} />
-                  <Tooltip formatter={(v) => `${asNumber(v).toFixed(1)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
+                  <Tooltip formatter={(v) => `${asNumber(v).toFixed(0)}%`} contentStyle={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 8 }} />
                   <Bar dataKey="utilization" fill="#1B4332" name="Utilization %" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -1004,7 +1004,7 @@ export function Reports() {
             </div>
           </Panel>
 
-          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(1)}% of payments have no bank reference on file`}>
+          <Panel title="Payment Verification" subtitle={`${data.unverifiedPct.toFixed(0)}% of payments have no bank reference on file`}>
             <div className="h-64 w-full">
               <ResponsiveContainer>
                 <PieChart>

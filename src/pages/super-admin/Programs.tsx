@@ -5,6 +5,7 @@ import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
 import { Badge } from '../../components/ui/Badge';
+import { Select } from '../../components/ui/Select';
 
 export function Programs() {
   const { programs, cohortRules, cohorts, locations } = useDataStore();
@@ -167,12 +168,12 @@ export function Programs() {
             
             <FormField label="Location" required>
               {(id) => (
-                <select id={id} name="locationId" required>
+                <Select id={id} name="locationId" required containerClassName="w-full">
                   <option value="all">All Locations</option>
                   {locations.map(loc => (
                     <option key={loc.id} value={loc.id}>{loc.name}</option>
                   ))}
-                </select>
+                </Select>
               )}
             </FormField>
           </div>
@@ -182,15 +183,16 @@ export function Programs() {
             
             <FormField label="Rule Type" required>
               {(id) => (
-                <select 
+                <Select 
                   id={id} 
                   name="ruleType" 
                   value={ruleType}
                   onChange={(e) => setRuleType(e.target.value as any)}
+                  containerClassName="w-full"
                 >
                   <option value="birth_year_range">Birth Year Range</option>
                   <option value="birth_year_exact">Exact Birth Year</option>
-                </select>
+                </Select>
               )}
             </FormField>
 

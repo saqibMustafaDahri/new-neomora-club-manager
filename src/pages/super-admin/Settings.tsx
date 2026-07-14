@@ -1,4 +1,5 @@
 import { Tabs } from "../../components/ui/Tabs";
+import { Select } from "../../components/ui/Select";
 
 const mockLocations = [
     { id: 1, name: "Jeddah Elite Sports Center" },
@@ -27,15 +28,15 @@ export function Settings() {
                 </Field>
 
                 <Field label="Default Currency">
-                    <select className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm shadow-sm transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                    <Select className="h-11 px-4" containerClassName="w-full">
                         <option value="SAR">SAR · Saudi Riyal</option>
                         <option value="AED">AED · UAE Dirham</option>
                         <option value="USD">USD · US Dollar</option>
-                    </select>
+                    </Select>
                 </Field>
 
                 <Field label="Timezone">
-                    <select className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm shadow-sm transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                    <Select className="h-11 px-4" containerClassName="w-full">
                         <option value="Asia/Riyadh">
                             Asia/Riyadh (GMT+3)
                         </option>
@@ -43,7 +44,7 @@ export function Settings() {
                         <option value="Asia/Dubai">
                             Asia/Dubai (GMT+4)
                         </option>
-                    </select>
+                    </Select>
                 </Field>
 
                 <div className="rounded-xl border border-border bg-surface-muted p-5">
@@ -143,10 +144,10 @@ export function Settings() {
     const localisationContent = (
         <Card title="Language">
             <Field label="Interface Language">
-                <select className="flex h-10 w-48 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                <Select className="h-10 px-3 py-2" containerClassName="w-48">
                     <option value="en">English</option>
                     {/* <option value="ar">العربية</option> */}
-                </select>
+                </Select>
             </Field>
             <div className="space-y-3 pt-3">
                 <label className="text-sm font-medium leading-none text-text">Default language per location</label>
@@ -154,10 +155,10 @@ export function Settings() {
                     {mockLocations.map((l) => (
                         <div key={l.id} className="flex items-center justify-between rounded-md border border-border p-3">
                             <span className="text-sm font-medium text-text">{l.name}</span>
-                            <select className="flex h-10 w-40 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                            <Select className="h-10 px-3 py-2" containerClassName="w-40">
                                 <option value="en">English</option>
                                 {/* <option value="ar">العربية</option> */}
-                            </select>
+                            </Select>
                         </div>
                     ))}
                 </div>

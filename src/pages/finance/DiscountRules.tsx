@@ -7,6 +7,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
+import { Select } from '../../components/ui/Select';
 import type { DiscountRule } from '../../types';
 
 export function DiscountRules() {
@@ -155,22 +156,22 @@ export function DiscountRules() {
           
           <FormField label="Rule Type" required>
             {(id) => (
-              <select id={id} name="type" value={ruleType} onChange={(e) => setRuleType(e.target.value as any)} required>
+              <Select id={id} name="type" value={ruleType} onChange={(e) => setRuleType(e.target.value as any)} required containerClassName="w-full">
                 <option value="sibling">Sibling Discount</option>
                 <option value="term_commitment">Term Commitment</option>
                 <option value="promo">Promo Code</option>
-              </select>
+              </Select>
             )}
           </FormField>
 
           <FormField label="Program Scope" required>
             {(id) => (
-              <select id={id} name="programId" required>
+              <Select id={id} name="programId" required containerClassName="w-full">
                 <option value="all">All Programs</option>
                 {programs.map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 

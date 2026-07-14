@@ -222,8 +222,11 @@ import {
   Banknote,
   Settings,
   BarChart3,
+  Bell,
   ScrollText,
   MessageSquare,
+  Link2,
+  // FilePlus
 } from 'lucide-react';
 import type { NavItem } from '../components/layout/Sidebar';
 
@@ -235,8 +238,9 @@ export const superAdminNav: NavItem[] = [
   { label: 'Users', icon: Users, path: '/super-admin/users' },
   { label: 'Participants', icon: UserPlus, path: '/super-admin/register' },
   // { label: 'Registration Form', icon: FilePlus, path: '/super-admin/register-form' },
+  { label: 'Registration Requests', icon: Link2, path: '/super-admin/registration-requests' },
   { label: 'Enquiries', icon: MessageSquare, path: '/super-admin/enquiries' },
-  // { label: 'Notifications', icon: Bell, path: '/super-admin/notifications' },
+  { label: 'Notifications', icon: Bell, path: '/super-admin/notifications' },
   { label: 'Reports', icon: BarChart3, path: '/super-admin/reports' },
   { label: 'System Logs', icon: ScrollText, path: '/super-admin/system-logs' },
   { label: 'Settings', icon: Settings, path: '/super-admin/settings' },
@@ -266,5 +270,5 @@ export const coachNav: NavItem[] = [
 export const parentTopNav: NavItem[] = [
   { label: 'Dashboard', icon: Home, path: '/parent/dashboard' },
   { label: 'Payments', icon: Banknote, path: '/parent/payments' },
-  // { label: 'Notifications', icon: Bell, path: '/parent/notifications' },
+  { label: 'Notifications', icon: Bell, path: '/parent/notifications' },
 ];

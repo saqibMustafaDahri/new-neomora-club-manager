@@ -6,6 +6,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
+import { Select } from '../../components/ui/Select';
 import type { SessionTemplate } from '../../types';
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -171,34 +172,34 @@ export function Schedule() {
           
           <FormField label="Cohort" required>
             {(id) => (
-              <select id={id} name="cohortId" required defaultValue={editingTemplate?.cohortId}>
+              <Select id={id} name="cohortId" required defaultValue={editingTemplate?.cohortId} containerClassName="w-full">
                 <option value="" disabled>Select Cohort</option>
                 {cohorts.map(c => (
                   <option key={c.id} value={c.id}>{c.label}</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
           
           <FormField label="Pitch" required>
             {(id) => (
-              <select id={id} name="pitchId" required defaultValue={editingTemplate?.pitchId}>
+              <Select id={id} name="pitchId" required defaultValue={editingTemplate?.pitchId} containerClassName="w-full">
                 <option value="" disabled>Select Pitch</option>
                 {scopedPitches.map(p => (
                   <option key={p.id} value={p.id}>{p.name} ({locations.find(l => l.id === p.locationId)?.name})</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Day of Week" required>
               {(id) => (
-                <select id={id} name="dayOfWeek" required defaultValue={editingTemplate?.dayOfWeek ?? defaultDay}>
+                <Select id={id} name="dayOfWeek" required defaultValue={editingTemplate?.dayOfWeek ?? defaultDay} containerClassName="w-full">
                   {DAYS.map((day, i) => (
                     <option key={i} value={i}>{day}</option>
                   ))}
-                </select>
+                </Select>
               )}
             </FormField>
             

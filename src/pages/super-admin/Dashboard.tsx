@@ -82,11 +82,12 @@
 
 
 import { useMemo, useState } from 'react';
-import { MapPin, Users, Banknote, ListOrdered, TrendingUp, CalendarClock, Percent, AlertTriangle } from 'lucide-react';
+import { MapPin, Users, Banknote, ListOrdered, TrendingUp, CalendarClock, Percent, AlertTriangle, SaudiRiyal } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { StatCard } from '../../components/ui/StatCard';
 import { DataTable, type Column } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
+import { Select } from '../../components/ui/Select';
 
 export function Dashboard() {
   const { locations, registrations, invoices, payments, waitlistEntries, terms, seasons } = useDataStore();
@@ -163,16 +164,17 @@ export function Dashboard() {
         <div className="flex items-center gap-2">
           <CalendarClock className="w-4 h-4 text-text-muted" />
           <label htmlFor="season-select" className="text-xs font-medium text-text-muted uppercase tracking-wider">Season</label>
-          <select
+          <Select
             id="season-select"
             value={selectedSeason?.id ?? ''}
             onChange={(e) => setSeasonId(e.target.value)}
-            className="text-sm bg-surface border border-border rounded-md px-3 py-2 text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary min-w-[160px]"
+            className="text-sm px-3 py-2 bg-surface text-text"
+            containerClassName="min-w-[160px]"
           >
             {seasons.map((s) => (
               <option key={s.id} value={s.id}>{s.name}</option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -185,13 +187,13 @@ export function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard icon={MapPin} label="Total Locations" value={locations.length} accent="primary" />
         <StatCard icon={Users} label="Active Students" value={uniqueActiveStudents} accent="success" />
-        <StatCard icon={Banknote} label="Total Revenue (SAR)" value={totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} accent="warning" />
+        <StatCard icon={Banknote} label="Total Revenue" value={<span className="inline-flex items-center"><SaudiRiyal className="w-8 h-8 mr-1.5 opacity-80" />{totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>} accent="warning" />
         <StatCard icon={ListOrdered} label="Waitlisted Students" value={waitlisted} accent="danger" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard icon={TrendingUp} label="Avg. Revenue per Student" value={`SAR ${avgRevenuePerStudent.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`} accent="primary" />
-        <StatCard icon={Percent} label="Collection Rate" value={`${collectionRatePct.toFixed(1)}%`} accent={collectionRatePct >= 99 ? 'success' : collectionRatePct >= 90 ? 'warning' : 'danger'} />
+        <StatCard icon={TrendingUp} label="Avg. Revenue per Student" value={<span className="inline-flex items-center"><SaudiRiyal className="w-8 h-8 mr-1.5 opacity-80" />{avgRevenuePerStudent.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>} accent="primary" />
+        <StatCard icon={Percent} label="Collection Rate" value={`${collectionRatePct.toFixed(0)}%`} accent={collectionRatePct >= 99 ? 'success' : collectionRatePct >= 90 ? 'warning' : 'danger'} />
         <StatCard icon={AlertTriangle} label="Invoices Needing Attention" value={unpaidOrPartialCount} accent={unpaidOrPartialCount > 0 ? 'warning' : 'success'} />
         <StatCard icon={Users} label="Total Registrations" value={seasonRegistrations.length} accent="primary" />
       </div>

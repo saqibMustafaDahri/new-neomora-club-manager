@@ -4,6 +4,7 @@ import { useDataStore, AttendanceActions } from '../../store/dataStore';
 import { selectCoachSessions } from '../../store/selectors';
 import { useToast } from '../../components/ui/Toast';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { Select } from '../../components/ui/Select';
 import type { Attendance } from '../../types';
 
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -156,15 +157,16 @@ export function AttendancePage() {
       <div className="bg-surface rounded-lg border border-border shadow-sm p-5 flex flex-wrap gap-4 items-end">
         <div className="flex flex-col gap-1 flex-1 min-w-[200px]">
           <label className="text-xs font-medium text-text-muted uppercase tracking-wider">Session</label>
-          <select
+          <Select
             value={selectedSessionId}
             onChange={e => setSelectedSessionId(e.target.value)}
-            className="text-sm bg-red-400 border border-border rounded-md px-3 py-2 text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            className="text-sm px-3 py-2 bg-background text-text"
+            containerClassName="min-w-[220px]"
           >
             {assignedSessions.map(s => (
               <option key={s.id} value={s.id}>{sessionLabel(s)}</option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-text-muted uppercase tracking-wider">Date</label>

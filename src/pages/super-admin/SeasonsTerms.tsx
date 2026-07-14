@@ -201,6 +201,7 @@ import { DataTable, type Column, type FilterConfig } from '../../components/ui/D
 import { Modal } from '../../components/ui/Modal';
 import { FormField } from '../../components/ui/FormField';
 import { useToast } from '../../components/ui/Toast';
+import { Select } from '../../components/ui/Select';
 import type { Term } from '../../types';
 
 type TermStatus = 'open' | 'closed' | 'upcoming';
@@ -390,12 +391,12 @@ export function SeasonsTerms() {
         <form id="term-form" onSubmit={handleSubmit} className="space-y-4 py-2">
           <FormField label="Location" required>
             {(id) => (
-              <select id={id} name="locationId" required defaultValue={editingTerm?.locationId}>
+              <Select id={id} name="locationId" required defaultValue={editingTerm?.locationId} containerClassName="w-full">
                 <option value="" disabled>Select Location</option>
                 {locations.map(loc => (
                   <option key={loc.id} value={loc.id}>{loc.name}</option>
                 ))}
-              </select>
+              </Select>
             )}
           </FormField>
 
