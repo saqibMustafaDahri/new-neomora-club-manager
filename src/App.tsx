@@ -535,7 +535,7 @@ function App() {
         <Route path="/ui-kit" element={<UIKit />} />
 
         {/* ── Super Admin ─────────────────────────────────── */}
-        <Route path="/super-admin" element={<AppShell navItems={superAdminNav} />}>
+        <Route path="/super-admin" element={<AppShell navItems={superAdminNav} notificationTo="/super-admin/notifications" />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<SuperAdminDashboard />} />
           <Route path="locations" element={<SuperAdminLocations />} />

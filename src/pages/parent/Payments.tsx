@@ -736,7 +736,7 @@
 
 
 import { useState, useMemo } from 'react';
-import { AlertTriangle, Plus, CreditCard, Lock, CheckCircle2, Receipt } from 'lucide-react';
+import { AlertTriangle, Plus, CreditCard, Lock, CheckCircle2, Receipt, SaudiRiyal } from 'lucide-react';
 import { useDataStore, PaymentActions } from '../../store/dataStore';
 import { selectFamilyRegistrations, selectFamilyStudents } from '../../store/selectors';
 import { Badge } from '../../components/ui/Badge';
@@ -897,7 +897,7 @@ export function Payments() {
                 <Badge variant={group.status === 'Paid' ? 'success' : group.status === 'Partial' ? 'warning' : 'danger'}>
                   {group.status}
                 </Badge>
-                <span className="text-sm font-bold text-text">{group.total.toFixed(2)} SAR</span>
+                <span className="flex items-center gap-1 text-sm font-bold text-text"><SaudiRiyal className='w-4 h-4'/>{group.total.toFixed(2)} </span>
               </div>
             </div>
 
@@ -921,18 +921,18 @@ export function Payments() {
                       <Badge variant={inv.status === 'Paid' ? 'success' : inv.status === 'Partial' ? 'warning' : 'danger'}>
                         {inv.status}
                       </Badge>
-                      <span className="text-sm font-bold text-text">{inv.total.toFixed(2)} SAR</span>
+                      <span className=" flex items-center gap-1 text-sm font-bold text-text"><SaudiRiyal className='w-4 h-4'/>{inv.total.toFixed(2)}</span>
                     </div>
                   </button>
 
                   {expandedId === inv.id && (
                     <div className="border-t border-border px-5 py-4 space-y-4 bg-surface-muted/10">
                       <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-xs text-text-muted">
-                        <div className="flex justify-between"><span>Base amount</span><span>{inv.baseAmount.toFixed(2)} SAR</span></div>
-                        <div className="flex justify-between"><span>Kit fee</span><span>{inv.kitFee.toFixed(2)} SAR</span></div>
-                        <div className="flex justify-between"><span>Reg fee</span><span>{inv.registrationFee.toFixed(2)} SAR</span></div>
-                        {inv.discountPct > 0 && <div className="flex justify-between text-success"><span>Discount ({inv.discountPct}%)</span><span>-{inv.discountAmount.toFixed(2)} SAR</span></div>}
-                        <div className="flex justify-between"><span>VAT</span><span>{inv.vatAmount.toFixed(2)} SAR</span></div>
+                        <div className="flex justify-between"><span>Base amount</span><span className="flex items-center gap-1"><SaudiRiyal className='w-3 h-3'/>{inv.baseAmount.toFixed(2)} </span></div>
+                        <div className="flex justify-between"><span>Kit fee</span><span className="flex items-center gap-1"><SaudiRiyal className='w-3 h-3'/>{inv.kitFee.toFixed(2)} </span></div>
+                        <div className="flex justify-between"><span>Reg fee</span><span className="flex items-center gap-1"><SaudiRiyal className='w-3 h-3'/>{inv.registrationFee.toFixed(2)} </span></div>
+                        {inv.discountPct > 0 && <div className="flex justify-between text-success"><span>Discount ({inv.discountPct}%)</span><span className="flex items-center gap-1"><SaudiRiyal className='w-3 h-3'/>-{inv.discountAmount.toFixed(2)} </span></div>}
+                        <div className="flex justify-between"><span>VAT</span><span className="flex items-center gap-1"><SaudiRiyal className='w-3 h-3'/>{inv.vatAmount.toFixed(2)} </span></div>
                       </div>
 
                       <div className="border-t border-border pt-3">
@@ -944,8 +944,8 @@ export function Payments() {
                             {inv.invoicePayments.map(p => (
                               <div key={p.id} className="flex justify-between text-xs text-text-muted">
                                 <span>{p.paidDate} · {p.method.replace('_', ' ')}</span>
-                                <span className={`font-medium ${!p.bankRef ? 'text-warning' : 'text-text'}`}>
-                                  {p.amount.toFixed(2)} SAR {!p.bankRef && '⚠ no ref'}
+                                <span className={`flex items-center gap-1 font-medium ${!p.bankRef ? 'text-warning' : 'text-text'}`}>
+                                  <SaudiRiyal className='w-4 h-4'/>{p.amount.toFixed(2)}  {!p.bankRef && '⚠ no ref'}
                                 </span>
                               </div>
                             ))}
@@ -953,8 +953,8 @@ export function Payments() {
                         )}
                         <div className="flex justify-between text-xs font-semibold text-text mt-2 pt-2 border-t border-border">
                           <span>Balance due</span>
-                          <span className={inv.balance <= 0 ? 'text-success' : 'text-danger'}>
-                            {Math.max(0, inv.balance).toFixed(2)} SAR
+                          <span className={`flex items-center gap-1 ${inv.balance <= 0 ? 'text-success' : 'text-danger'}`}>
+                            <SaudiRiyal className='w-4 h-4'/>{Math.max(0, inv.balance).toFixed(2)}
                           </span>
                         </div>
                       </div>

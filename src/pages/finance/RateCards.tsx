@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus ,SaudiRiyal} from 'lucide-react';
 import { useDataStore, RateCardActions } from '../../store/dataStore';
 import { DataTable, type Column } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
@@ -79,10 +79,39 @@ export function RateCards() {
 
   const columns: Column<typeof tableData[0]>[] = [
     { key: 'programName', label: 'Program' },
-    { key: 'weeklyRate', label: 'Weekly Rate', render: (val) => `${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })} SAR` },
-    { key: 'kitFee', label: 'Kit Fee', render: (val) => `${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })} SAR` },
-    { key: 'registrationFee', label: 'Reg Fee', render: (val) => `${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })} SAR` },
-    { key: 'minBillableWeeks', label: 'Min Weeks' },
+
+// ...
+
+{
+    key: 'weeklyRate',
+    label: 'Weekly Rate',
+    render: (val) => (
+        <span className="inline-flex items-center gap-1">
+            <SaudiRiyal size={14} />
+            {Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+        </span>
+    ),
+},
+{
+    key: 'kitFee',
+    label: 'Kit Fee',
+    render: (val) => (
+        <span className="inline-flex items-center gap-1">
+            <SaudiRiyal size={14} />
+            {Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+        </span>
+    ),
+},
+{
+    key: 'registrationFee',
+    label: 'Reg Fee',
+    render: (val) => (
+        <span className="inline-flex items-center gap-1">
+            <SaudiRiyal size={14} />
+            {Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+        </span>
+    ),
+},    { key: 'minBillableWeeks', label: 'Min Weeks' },
     {
       key: 'effectiveFrom',
       label: 'Date Range',

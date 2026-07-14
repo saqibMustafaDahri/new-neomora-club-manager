@@ -63,9 +63,9 @@ export function Apply() {
     }
 
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4 py-10">
-            <div className="max-w-lg w-full">
-                <div className="text-center mb-6">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4 py-10 ">
+            <div className="max-w-4xl w-full">
+                <div className="text-center mb-6 ">
                     <img src="/neomora-logo.png" alt="Neomora" className="h-8 w-auto mx-auto mb-3" />
                     <h1 className="text-xl font-bold text-text">Registration Request</h1>
                     <p className="text-sm text-text-muted mt-1">
@@ -73,7 +73,7 @@ export function Apply() {
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="bg-surface rounded-xl border border-border shadow-sm p-6 space-y-4">
+                <form onSubmit={handleSubmit} className="bg-surface rounded-xl border border-border shadow-sm p-6 space-y-4 ">
                     <div>
                         <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Child's Details</h2>
                         <div className="space-y-3">

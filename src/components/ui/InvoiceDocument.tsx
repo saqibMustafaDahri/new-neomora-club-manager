@@ -1,4 +1,4 @@
-import { Printer } from 'lucide-react';
+import { Printer, SaudiRiyal } from 'lucide-react';
 import { useDataStore } from '../../store/dataStore';
 import { Modal } from './Modal';
 
@@ -210,7 +210,7 @@ export function InvoiceDocument({ registrationId, onClose }: InvoiceDocumentProp
                         <thead>
                             <tr className="bg-surface-muted border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider">
                                 <th className="px-3 py-2 text-left">Description</th>
-                                <th className="px-3 py-2 text-right">Amount (SAR)</th>
+                                <th className="px-3 py-2 text-right justify-end flex items-center ">Amount <span className='flex items-center justify-end'><SaudiRiyal className="w-4 h-4 mr-1.5 opacity-80" /></span></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border">
@@ -248,7 +248,11 @@ export function InvoiceDocument({ registrationId, onClose }: InvoiceDocumentProp
                         <tfoot>
                             <tr className="bg-surface-muted/50 font-bold text-text border-t border-border">
                                 <td className="px-3 py-3">Total</td>
-                                <td className="px-3 py-3 text-right">SAR {invoice.total.toFixed(2)}</td>
+                                <td className="px-3 py-3 text-right">
+                                    <span className="inline-flex items-center gap-1 justify-end">
+                                        <SaudiRiyal size={16} /> {invoice.total.toFixed(2)}
+                                    </span>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -297,8 +301,8 @@ export function InvoiceDocument({ registrationId, onClose }: InvoiceDocumentProp
 
                     <div className="flex justify-between items-center mt-3 pt-3 border-t border-border">
                         <span className="text-sm font-semibold text-text">Balance Due</span>
-                        <span className={`text-lg font-bold ${balance <= 0.01 ? 'text-success' : 'text-danger'}`}>
-                            SAR {Math.max(0, balance).toFixed(2)}
+                        <span className={`flex items-center justify-end text-lg font-bold ${balance <= 0.01 ? 'text-success' : 'text-danger'}`}>
+                            <SaudiRiyal size={16} /> {Math.max(0, balance).toFixed(2)}
                         </span>
                     </div>
                 </div>
